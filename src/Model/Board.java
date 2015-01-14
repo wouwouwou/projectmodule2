@@ -1,7 +1,5 @@
 package Model;
 
-import java.util.*;
-
 /**
  * Board class for the game Connect Four.
  * 
@@ -230,7 +228,6 @@ public class Board {
     
     /*@
     	requires this.isColumn(col);
-    	ensures \result == (this.getField(row, col) == Mark.XXX);
      */
     /**
      * Returns true if the column contains an empty field and is a valid move.

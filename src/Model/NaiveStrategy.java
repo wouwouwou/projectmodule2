@@ -1,6 +1,7 @@
 package Model;
 
-import java.util.*;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  *  Class for a Naive Strategy of a Computer Player.
