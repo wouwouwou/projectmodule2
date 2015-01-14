@@ -66,7 +66,7 @@ public class Board {
         	copy.setField(i, this.getField(i));
         	i++;
         	}
-                return copy;;
+            return copy;
     }
 
 
@@ -81,7 +81,7 @@ public class Board {
     public int index(int row, int col) {
     	int i = (7*row) + col;
         return i;
-    }Moet nog naar gekeken worden
+    }
 
 
     /*@
@@ -139,7 +139,7 @@ public class Board {
      * @return the mark on the field
      */
     public Mark getField(int row, int col) {
-    	return fields[index(row, col)];extra naar kijken
+    	return fields[index(row, col)];
     }
 
     /*@
@@ -219,17 +219,26 @@ public class Board {
      * @return true if there is a row which connects four marks <code>m</code>
      */
     public boolean hasRow(Mark m) {
-    	for (int row = 0; row < WIDTH; row++) {
-    	    boolean result = true;
-    	    for (int col = 0; col < HEIGHT; col++) {
-    		if (getField(row, col) != m) {
-    			result = false;
-    			break;
+    	int row = 0;
+    	while(row < HEIGHT){
+    		int col = 0;
+    		int counter = 0;
+    		while(col < WIDTH){
+    			if(getField(row, col) == m){
+    				counter++;
+    			}
+    			if(getField(row, col) != m){
+    				counter = 0;
+    			}
+    			if(counter == 4){
+    				return true;
+    			}
+    			if((WIDTH - col) > 4 - counter){
+    				break;
+    			}
+    			col++;
     		}
-    	    }
-    	    if (result == true) {
-    		return result;
-    	    }
+    		row++;
     	}
     	return false;
     }
@@ -253,7 +262,28 @@ public class Board {
      * @return true if there is a diagonal which connects four marks <code>m</code>
      */
     public boolean hasDiagonal(Mark m) {
-    	return false;
+    	int count = 0;
+    	for(int i = 0; i < WIDTH * HEIGHT; i++){
+    		if(i < 3 * WIDTH){
+    			if(i % 7 < 3){
+    				if(checkDiagonalLeftRight(m, i)){
+    					count++;
+    				}
+        		}
+        		else if(i % 7 == 3){
+        			if(checkDiagonalLeftRight(m, i) || heckDiagonalRightLeft(m, i)){
+        				count++;
+        			}
+        		}
+        		else{
+        			if(checkDiagonalRightLeft(m, i)){
+        				count++;
+        			}
+        		}
+    		}
+    		
+    	}
+    	return count > 0;
     }
 
     /*@
