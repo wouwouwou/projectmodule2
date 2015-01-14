@@ -240,6 +240,7 @@ public class Board {
     		if (getField(row, col) == Mark.XXX) {
     			break;
     		}
+    		row--;
     	}
     	return index(row, col);
     }
@@ -301,7 +302,7 @@ public class Board {
     			if(counter == 4){
     				return true;
     			}
-    			if((WIDTH - col) > 4 - counter){
+    			if((WIDTH - col) < (4 - counter)){
     				break;
     			}
     			col++;
@@ -333,7 +334,7 @@ public class Board {
     			if (counter == 4) {
     				return true;
     			}
-    			if ((HEIGHT - row) > 4 - counter) {
+    			if ((HEIGHT - row) < 4 - counter) {
     				break;
     			}
     			row++;
