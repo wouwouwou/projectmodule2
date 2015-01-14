@@ -2,12 +2,11 @@ package Model;
 
 
 /**
- * Abstract class for keeping a player in the Tic Tac Toe game. Module 2 lab
- * assignment.
+ * Abstract class for a player in Connect Four.
  * 
  * 
- * @author Theo Ruys en Arend Rensink
- * @version $Revision: 1.4 $
+ * @author Jan-Jaap van Raffe & Wouter Bos
+ * @version v1.0
  */
 public abstract class Player {
 
@@ -75,8 +74,8 @@ public abstract class Player {
      *            the current board
      */
     public void makeMove(Board board) {
-        int keuze = determineMove(board);
-        board.setField(keuze, getMark());
+    	int keuze = determineMove(board);
+    	board.setField(keuze, getMark());
     }
 
 }

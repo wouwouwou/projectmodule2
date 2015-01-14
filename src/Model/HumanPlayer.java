@@ -3,10 +3,10 @@ package Model;
 import java.util.Scanner;
 
 /**
- * Class for maintaining a human player in Tic Tac Toe. Module 2 lab assignment
+ * Class for a Human Player in Connect Four.
  * 
- * @author Theo Ruys
- * @version $Revision: 1.4 $
+ * @author Jan-Jaap van Raffe & Wouter Bos
+ * @version v1.0
  */
 public class HumanPlayer extends Player {
 
@@ -14,13 +14,12 @@ public class HumanPlayer extends Player {
 
     /*@
        requires name != null;
-       requires mark == Mark.XX || mark == Mark.OO;
+       requires mark == Mark.RED || mark == Mark.BLU;
        ensures this.getName() == name;
        ensures this.getMark() == mark;
     */
     /**
-     * Creates a new human player object.
-     * 
+     * Creates a new Human Player.
      */
     public HumanPlayer(String name, Mark mark) {
         super(name, mark);
@@ -31,11 +30,10 @@ public class HumanPlayer extends Player {
     /*@
        requires board != null;
        ensures board.isField(\result) && board.isEmptyField(\result);
-
      */
     /**
      * Asks the user to input the field where to place the next mark. This is
-     * done using the standard input/output. \
+     * done using the standard input/output.
      * 
      * @param board
      *            the game board
@@ -68,11 +66,14 @@ public class HumanPlayer extends Player {
         boolean intRead = false;
         do {
             System.out.print(prompt);
-            String line = (new Scanner(System.in)).nextLine();
+            Scanner in = new Scanner(System.in);
+            String line = in.nextLine();
             Scanner scannerLine = new Scanner(line);
             if (scannerLine.hasNextInt()) {
                 intRead = true;
                 value = scannerLine.nextInt();
+                in.close();
+                scannerLine.close();
             }
         } while (!intRead);
 

@@ -6,10 +6,10 @@ import Model.Board;
 import Model.Player;
 
 /**
- * Class for maintaining the Tic Tac Toe game. Lab assignment Module 2
+ * Controller class for the Connect Four game. 
  * 
- * @author Theo Ruys en Arend Rensink
- * @version $Revision: 1.4 $
+ * @author Jan-Jaap van Raffe & Wouter Bos
+ * @version v1.0
  */
 public class Game {
 
@@ -45,31 +45,31 @@ public class Game {
     // -- Constructors -----------------------------------------------
 
     /*@
-      requires s0 != null;
-      requires s1 != null;
+      requires p0 != null;
+      requires p1 != null;
      */
     /**
      * Creates a new Game object.
      * 
-     * @param s0
+     * @param p0
      *            the first player
-     * @param s1
+     * @param p1
      *            the second player
      */
-    public Game(Player s0, Player s1) {
+    public Game(Player p0, Player p1) {
         board = new Board();
         players = new Player[NUMBER_PLAYERS];
-        players[0] = s0;
-        players[1] = s1;
+        players[0] = p0;
+        players[1] = p1;
         current = 0;
     }
 
     // -- Commands ---------------------------------------------------
 
     /**
-     * Starts the Tic Tac Toe game. <br>
-     * Asks after each ended game if the user want to continue. Continues until
-     * the user does not want to play anymore.
+     * Starts the Connect Four game. <br>
+     * Asks after each ended game if the user wants to continue.
+     * Continues until the user doesn't want to play anymore.
      */
     public void start() {
         boolean doorgaan = true;
@@ -84,7 +84,7 @@ public class Game {
      * Prints a question which can be answered by yes (true) or no (false).
      * After prompting the question on standard out, this method reads a String
      * from standard in and compares it to the parameters for yes and no. If the
-     * user inputs a different value, the prompt is repeated and te method reads
+     * user inputs a different value, the prompt is repeated and the method reads
      * input again.
      * 
      * @parom prompt the question to print
@@ -114,16 +114,16 @@ public class Game {
     }
 
     /**
-     * Plays the Tic Tac Toe game. <br>
+     * Plays the Connect Four game. <br>
      * First the (still empty) board is shown. Then the game is played until it
      * is over. Players can make a move one after the other. After each move,
      * the changed game situation is printed.
      */
     private void play() {
-        this.update();
+        this.showBoard();
         while (!board.hasWinner() && !board.isFull()) {
             players[current].makeMove(board);
-            this.update();
+            this.showBoard();
             current = (current+1)%2;
         }
         this.printResult();
@@ -133,15 +133,14 @@ public class Game {
     /**
      * Prints the game situation.
      */
-    private void update() {
-        System.out.println("\ncurrent game situation: \n\n" + board.toString()
+    private void showBoard() {
+        System.out.println("\nCurrent game situation: \n\n" + board.toString()
                 + "\n");
     }
 
     /*@
        requires this.board.gameOver();
      */
-
     /**
      * Prints the result of the last game. <br>
      */

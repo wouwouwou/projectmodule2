@@ -1,26 +1,25 @@
 package Model;
 
 /**
- * Represents a mark in the Tic Tac Toe game. There three possible values:
- * Mark.XX, Mark.OO and Mark.EMPTY.
- * Module 2 lab assignment
+ * Represents a mark in the Connect Four game. There are three possible values:
+ * Mark.XXX, Mark.RED and Mark.BLU.
  * 
- * @author Theo Ruys
- * @version $Revision: 1.4 $
+ * @author Jan-Jaap van Raffe & Wouter Bos
+ * @version v1.0
  */
 public enum Mark {
     
     XXX, RED, BLU;
 
     /*@
-       ensures this == Mark.XX ==> \result == Mark.OO;
-       ensures this == Mark.OO ==> \result == Mark.XX;
-       ensures this == Mark.EMPTY ==> \result == Mark.EMPTY;
+       ensures this == Mark.RED ==> \result == Mark.BLU;
+       ensures this == Mark.BLU ==> \result == Mark.RED;
+       ensures this == Mark.XXX ==> \result == Mark.XXX;
      */
     /**
      * Returns the other mark.
      * 
-     * @return the other mark is this mark is not EMPTY or EMPTY
+     * @return the other mark if this mark is not XXX, else returns XXX
      */
     public Mark other() {
         if (this == RED) {
