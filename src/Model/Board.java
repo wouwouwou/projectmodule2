@@ -367,7 +367,7 @@ public class Board {
      */
     /*@pure*/
     public boolean isWinner(Mark m) {
-        return false;
+        return (hasColumn(m) || hasRow(m) || hasDiagonal(m));
     }
 
     /*@
@@ -382,7 +382,7 @@ public class Board {
      */
     /*@pure*/
     public boolean hasWinner() {
-        return false;
+        return (isWinner(Mark.RED) || isWinner(Mark.BLU));
     }
 
     /**
@@ -419,7 +419,9 @@ public class Board {
      * Mark.XXX).
      */
     public void reset() {
-        
+        for (int i = 0; i < WIDTH * HEIGHT; i++) {
+            fields[i] = Mark.XXX;
+        }
     }
 
     /*@
@@ -435,7 +437,7 @@ public class Board {
      *            the mark to be placed
      */
     public void setField(int i, Mark m) {
-    	
+    	fields[i] = m;
     }
 
     /*@
@@ -455,7 +457,7 @@ public class Board {
      *            the mark to be placed
      */
     public void setField(int row, int col, Mark m) {
-    	
+    	fields[index(row, col)] = m;
     }
 
 }
