@@ -1,8 +1,5 @@
 package Model;
 
-import ss.project.Board;
-import ss.project.Mark;
-
 /**
  * Board class for the game Connect Four.
  * 
