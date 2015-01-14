@@ -1,4 +1,4 @@
-package local;
+package Model;
 
 /**
  * Represents a mark in the Tic Tac Toe game. There three possible values:
@@ -10,7 +10,7 @@ package local;
  */
 public enum Mark {
     
-    EMPTY, XX, OO;
+    XXX, RED, BLU;
 
     /*@
        ensures this == Mark.XX ==> \result == Mark.OO;
@@ -23,12 +23,12 @@ public enum Mark {
      * @return the other mark is this mark is not EMPTY or EMPTY
      */
     public Mark other() {
-        if (this == XX) {
-            return OO;
-        } else if (this == OO) {
-            return XX;
+        if (this == RED) {
+            return BLU;
+        } else if (this == BLU) {
+            return RED;
         } else {
-            return EMPTY;
+            return XXX;
         }
     }
 }

@@ -1,6 +1,5 @@
-package local;
+package Model;
 
-import local.Board;
 
 public class ComputerPlayer extends Player {
     

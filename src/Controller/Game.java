@@ -1,8 +1,9 @@
-package local;
+package Controller;
 
 import java.util.Scanner;
 
-import local.Board;
+import Model.Board;
+import Model.Player;
 
 /**
  * Class for maintaining the Tic Tac Toe game. Lab assignment Module 2

@@ -1,9 +1,7 @@
-package local;
+package Model;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import local.Board;
 
 public class SmartStrategy implements Strategy {
     

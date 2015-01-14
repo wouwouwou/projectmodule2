@@ -1,8 +1,6 @@
-package local;
+package Model;
 
 import java.util.Scanner;
-
-import local.Board;
 
 /**
  * Class for maintaining a human player in Tic Tac Toe. Module 2 lab assignment

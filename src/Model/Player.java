@@ -1,6 +1,5 @@
-package local;
+package Model;
 
-import local.Board;
 
 /**
  * Abstract class for keeping a player in the Tic Tac Toe game. Module 2 lab

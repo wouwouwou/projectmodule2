@@ -1,8 +1,6 @@
-package local;
+package Model;
 
 import java.util.*;
-
-import local.Board;
 
 public class NaiveStrategy implements Strategy {
 

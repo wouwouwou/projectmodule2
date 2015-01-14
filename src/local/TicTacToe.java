@@ -1,5 +1,12 @@
 package local;
 
+import Controller.Game;
+import Model.ComputerPlayer;
+import Model.HumanPlayer;
+import Model.Mark;
+import Model.Player;
+import Model.SmartStrategy;
+
 public class TicTacToe {
 
     public static void main(String[] args) {
