@@ -1,10 +1,13 @@
 package Model;
 
+import ss.project.Board;
+import ss.project.Mark;
+
 /**
  * Board class for the game Connect Four.
  * 
  * @author Jan-Jaap van Raffe & Wouter Bos
- * @version 1.0
+ * @version 1.1
  */
 public class Board {
 
@@ -36,44 +39,56 @@ public class Board {
     // -- Constructors -----------------------------------------------
 
     /*@
-       ensures (\forall int i; 0 <= i & i < DIM * DIM; this.getField(i) == Mark.EMPTY);
+       ensures (\forall int i; 0 <= i & i < WIDTH * HEIGHT; this.getField(i) == Mark.XXX);
      */
     /**
      * Creates an empty Board.
      */
     public Board() {
-    	
+    	int i = 0;
+    	fields = new Mark[(WIDTH * HEIGHT)];
+    	do {
+    	    fields[i] = Mark.XXX;
+    	    i = i + 1;
+    	} while (i < (WIDTH * HEIGHT));
     }
 
     // -- Queries ----------------------------------------------------
 
     /*@
        ensures \result != this;
-       ensures (\forall int i; 0 <= i & i < DIM * DIM; \result.getField(i) == this.getField(i));
+       ensures (\forall int i; 0 <= i & i < WIDTH * HEIGHT; \result.getField(i) == this.getField(i));
      */
     /**
      * Creates a deep copy of this Board.
      */
     public Board deepCopy() {
-    	return null;
+        	Board copy = new Board();
+        	int i = 0;
+        	while (i < WIDTH * HEIGHT) {
+        	copy.setField(i, this.getField(i));
+        	i++;
+        	}
+                return copy;;
     }
 
 
     /*@
-       requires 0 <= row & row < DIM;
-       requires 0 <= col & col < DIM;
+       requires 0 <= row & row < WIDTH;
+       requires 0 <= col & col < HEIGHT;
      */
     /**
      * Calculates the index in the linear array of fields from a (row, col) pair.
      * @return the index belonging to the (row,col)-field
      */
     public int index(int row, int col) {
-        return 0;
-    }
+    	int i = (7*row) + col;
+        return i;
+    }Moet nog naar gekeken worden
 
 
     /*@
-       ensures \result == (0 <= ix && ix < DIM * DIM);
+       ensures \result == (0 <= ix && ix < WIDTH * HEIGHT);
      */
     /**
      * Returns true if <code>i</code> is a valid index of a field on the student.
@@ -81,11 +96,11 @@ public class Board {
      */
     /*@pure*/
     public boolean isField(int i) {
-	return false;
+    	return (0 <= i && i < WIDTH * HEIGHT);
     }
 
     /*@
-       ensures \result == (0 <= row && row < DIM && 0 <= col && col < DIM);
+       ensures \result == (0 <= row && row < WIDTH && 0 <= col && col < HEIGHT);
      */
     /**
      * Returns true of the (row,col) pair refers to a valid field on the student.
@@ -94,13 +109,13 @@ public class Board {
      */
     /*@pure*/
     public boolean isField(int row, int col) {
-        return false;
+        return (0 <= row && row < HEIGHT && 0 <= col && col < WIDTH);
     }
 
 
     /*@
        requires this.isField(i);
-       ensures \result == Mark.EMPTY || \result == Mark.XX || \result == Mark.OO;
+       ensures \result == Mark.XXX || \result == Mark.RED || \result == Mark.BLU;
      */
     /**
      * Returns the content of the field <code>i</code>.
@@ -110,12 +125,12 @@ public class Board {
      * @return the mark on the field
      */
     public Mark getField(int i) {
-	    return null; 
+    	return fields[i]; 
     }
 
     /*@
        requires this.isField(row,col);
-       ensures \result == Mark.EMPTY || \result == Mark.XX || \result == Mark.OO;
+       ensures \result == Mark.XXX || \result == Mark.RED || \result == Mark.BLU;
      */
     /**
      * Returns the content of the field referred to by the (row,col) pair.
@@ -127,12 +142,12 @@ public class Board {
      * @return the mark on the field
      */
     public Mark getField(int row, int col) {
-        return null;
+    	return fields[index(row, col)];extra naar kijken
     }
 
     /*@
        requires this.isField(i);
-       ensures \result == (this.getField(i) == Mark.EMPTY);
+       ensures \result == (this.getField(i) == Mark.XXX);
      */
     /**
      * Returns true if the field <code>i</code> is empty.
@@ -142,12 +157,12 @@ public class Board {
      * @return true if the field is empty
      */
     public boolean isEmptyField(int i) {
-        return false;
+        return getField(i) == Mark.XXX;
     }
 
     /*@
        requires this.isField(row,col);
-       ensures \result == (this.getField(row,col) == Mark.EMPTY);
+       ensures \result == (this.getField(row,col) == Mark.XXX);
 
      */
     /**
@@ -161,11 +176,11 @@ public class Board {
      */
     /*@pure*/
     public boolean isEmptyField(int row, int col) {
-        return false;
+        return getField(row, col) == Mark.XXX;
     }
 
     /*@
-       ensures \result == (\forall int i; i <= 0 & i < DIM * DIM; this.getField(i) != Mark.EMPTY);
+       ensures \result == (\forall int i; i <= 0 & i < WIDTH * HEIGHT; this.getField(i) != Mark.XXX);
      */
     /**
      * Tests if the whole Board is full.
@@ -174,7 +189,14 @@ public class Board {
      */
     /*@pure*/
     public boolean isFull() {
-    	return false;
+    	int i = 0;
+    	while (isField(i)) {
+    	    if (getField(i) == Mark.XXX) {
+    		return false;
+    	    }
+    	    i = i + 1;
+    	}
+    	return true;
     }
 
     /*@
@@ -189,7 +211,7 @@ public class Board {
      */
     /*@pure*/
     public boolean gameOver() {
-        return false;
+    	return (isFull() || hasWinner());
     }
 
     /**
@@ -200,6 +222,18 @@ public class Board {
      * @return true if there is a row which connects four marks <code>m</code>
      */
     public boolean hasRow(Mark m) {
+    	for (int row = 0; row < WIDTH; row++) {
+    	    boolean result = true;
+    	    for (int col = 0; col < HEIGHT; col++) {
+    		if (getField(row, col) != m) {
+    			result = false;
+    			break;
+    		}
+    	    }
+    	    if (result == true) {
+    		return result;
+    	    }
+    	}
     	return false;
     }
 
