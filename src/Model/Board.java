@@ -14,12 +14,12 @@ public class Board {
 
     public static final int HEIGHT = 6;
     public static final int WIDTH = 7;
-    private static final String[] NUMBERING ={" 00 | 01 | 02 | 03 | 04 | 05 | 06 ",
-    	"----+----+----+----+----+----+----", " 07 | 08 | 09 | 10 | 11 | 12 | 13 ",
-    	"----+----+----+----+----+----+----", " 14 | 15 | 16 | 17 | 18 | 19 | 20 ", 
-    	"----+----+----+----+----+----+----", " 21 | 22 | 23 | 24 | 25 | 26 | 27 ", 
-    	"----+----+----+----+----+----+----", " 28 | 29 | 30 | 31 | 32 | 33 | 34 ", 
-    	"----+----+----+----+----+----+----", " 35 | 36 | 37 | 38 | 39 | 40 | 41 ", };
+    private static final String[] NUMBERING = {"  0  |  1  |  2  |  3  |  4  |  5  |  6  ",
+    	"-----+-----+-----+-----+-----+-----+-----", " 07 | 08 | 09 | 10 | 11 | 12 | 13 ",
+    	"-----+-----+-----+-----+-----+-----+-----", " 14 | 15 | 16 | 17 | 18 | 19 | 20 ", 
+    	"-----+-----+-----+-----+-----+-----+-----", " 21 | 22 | 23 | 24 | 25 | 26 | 27 ", 
+    	"-----+-----+-----+-----+-----+-----+-----", " 28 | 29 | 30 | 31 | 32 | 33 | 34 ", 
+    	"-----+-----+-----+-----+-----+-----+-----", " 35 | 36 | 37 | 38 | 39 | 40 | 41 "};
     private static final String LINE = NUMBERING[1];
     private static final String DELIM = "     ";
 
@@ -393,19 +393,20 @@ public class Board {
      */
     public String toString() {
         String s = "";
-        for (int i = 0; i < DIM; i++) {
+        for (int i = 0; i < HEIGHT; i++) {
             String row = "";
-            for (int j = 0; j < DIM; j++) {
+            for (int j = 0; j < WIDTH; j++) {
                 row = row + " " + getField(i, j).toString() + " ";
-                if (j < DIM - 1) {
+                if (j < WIDTH - 1) {
                     row = row + "|";
                 }
             }
-            s = s + row + DELIM + NUMBERING[i * 2];
-            if (i < DIM - 1) {
-                s = s + "\n" + LINE + DELIM + NUMBERING[i * 2 + 1] + "\n";
+            s = s + row;
+            if (i < HEIGHT - 1) {
+                s = s + "\n" + LINE + "\n";
             }
         }
+        s = s + "\n" + LINE + "\n" + NUMBERING[0];
         return s;
     }
 
