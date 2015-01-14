@@ -8,7 +8,7 @@ import Model.Player;
 /**
  * Controller class for the Connect Four game. 
  * 
- * @author Jan-Jaap van Raffe & Wouter Bos
+ * @author Jan-Jaap van Raffe and Wouter Bos
  * @version v1.0
  */
 public class Game {

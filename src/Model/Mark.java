@@ -4,7 +4,7 @@ package Model;
  * Represents a mark in the Connect Four game. There are three possible values:
  * Mark.XXX, Mark.RED and Mark.BLU.
  * 
- * @author Jan-Jaap van Raffe & Wouter Bos
+ * @author Jan-Jaap van Raffe and Wouter Bos
  * @version v1.0
  */
 public enum Mark {

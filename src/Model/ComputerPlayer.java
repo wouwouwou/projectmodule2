@@ -3,7 +3,7 @@ package Model;
 /**
  *  Class for a Computer Player in Connect Four.
  * 
- * @author Jan-Jaap van Raffe & Wouter Bos
+ * @author Jan-Jaap van Raffe and Wouter Bos
  * @version 1.0
  */
 public class ComputerPlayer extends Player {
@@ -19,7 +19,9 @@ public class ComputerPlayer extends Player {
     
     /**
      * Creates a Computer Player with a Naive Strategy.
+     * 
      * @param mark
+     *             the mark which the player will play with
      */
     public ComputerPlayer(Mark mark){
     	super("Naive computer -", mark);

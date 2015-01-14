@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * Board class for the game Connect Four.
  * 
- * @author Jan-Jaap van Raffe & Wouter Bos
+ * @author Jan-Jaap van Raffe and Wouter Bos
  * @version 1.1
  */
 public class Board {
@@ -25,9 +25,9 @@ public class Board {
     // -- Instance variables -----------------------------------------
 
     /*@
-       private invariant fields.length == DIM*DIM;
-       invariant (\forall int i; 0 <= i & i < DIM*DIM;
-           getField(i) == Mark.EMPTY || getField(i) == Mark.XX || getField(i) == Mark.OO);
+       private invariant fields.length == WIDTH*HEIGHT;
+       invariant (\forall int i; 0 <= i & i < WIDTH*HEIGHT;
+           getField(i) == Mark.XXX || getField(i) == Mark.RED || getField(i) == Mark.BLU);
      */
     /**
      * The fields of the Board. See NUMBERING for the coding of the fields.
@@ -59,6 +59,8 @@ public class Board {
      */
     /**
      * Creates a deep copy of this Board.
+     * 
+     * @return Returns a copy of this Board.
      */
     public Board deepCopy() {
         	Board copy = new Board();
@@ -77,6 +79,10 @@ public class Board {
      */
     /**
      * Calculates the index in the linear array of fields from a (row, col) pair.
+     * @param row
+     *             the row
+     * @param col
+     *             the column
      * @return the index belonging to the (row,col)-field
      */
     public int index(int row, int col) {
@@ -90,6 +96,10 @@ public class Board {
     /**
      * Calculates the row and the col of the field from an index. Returns it in an int[].
      * int[0] should return the col. int[1] should return the row.
+     * 
+     * @param i
+     *             the index of the field.
+     * 
      * @return the col and the row of the field with index i.
      */
     public int[] getRowCol(int i) {
@@ -100,11 +110,15 @@ public class Board {
     }
     
     /*@
-       ensures \result == (0 <= ix && ix < WIDTH * HEIGHT);
+       ensures \result == (0 <= i && i < WIDTH * HEIGHT);
      */
     /**
      * Returns true if <code>i</code> is a valid index of a field on the student.
-     * @return <code>true</code> if <code>0 <= ix < HEIGHT * WIDTH</code>
+     * 
+     * @param i
+     *             the index of the field.
+     * 
+     * @return <code>true</code> if <code>0 <= i < HEIGHT * WIDTH</code>
      */
     /*@pure*/
     public boolean isField(int i) {
@@ -112,10 +126,14 @@ public class Board {
     }
     
     /*@
-    	ensures \result == (0 <= i && i < WIDTH);
+    	ensures \result == (0 <= col && col < WIDTH);
     */
     /**
-     * Returns true if <code>i</code> is a valid column of this board
+     * Returns true if <code>i</code> is a valid column of this board.
+     * 
+     * @param col
+     *             the column
+     * 
      * @return <code>true</code> if <code>0 <= i < WIDTH</code>
      */
     /*@pure*/
@@ -128,6 +146,12 @@ public class Board {
      */
     /**
      * Returns true of the (row,col) pair refers to a valid field on the student.
+     * 
+     * @param row
+     *             the row
+     * 
+     * @param col
+     *             the column
      * 
      * @return true if <code>0 <= row < HEIGHT && 0 <= col < WIDTH</code>
      */
@@ -146,6 +170,7 @@ public class Board {
      * 
      * @param i
      *            the number of the field (see NUMBERING)
+     *            
      * @return the mark on the field
      */
     public Mark getField(int i) {
@@ -204,15 +229,16 @@ public class Board {
     }
     
     /*@
-    	requires this.isField(i);
-    	ensures \result == (this.getField(i) == Mark.XXX);
+    	requires this.isColumn(col);
+    	ensures \result == (this.getField(row, col) == Mark.XXX);
      */
     /**
      * Returns true if the column contains an empty field and is a valid move.
      * 
-     * @param i
-     *            the index of the field (see NUMBERING)
-     * @return true if the field is empty
+     * @param col
+     *            the column
+     *
+     * @return true if the column contains an empty field
      */
     public boolean isValidColumn(int col) {
     	int row = 0;
@@ -232,7 +258,9 @@ public class Board {
      * When a player makes a move, this method determines the field where the Mark will be placed.
      * 
      * @param col
-     * @return
+     *             the column
+     * 
+     * @return lowest field on the board. (highest index, highest row)
      */
     public int determineField(int col) {
     	int row = HEIGHT - 1;
@@ -285,6 +313,7 @@ public class Board {
      * 
      * @param m
      *            the mark of interest
+     *
      * @return true if there is a row which connects four marks <code>m</code>
      */
     public boolean hasRow(Mark m) {
@@ -317,6 +346,7 @@ public class Board {
      * 
      * @param m
      *            the mark of interest
+     *            
      * @return true if there is a column which connects four marks <code>m</code>
      */
     public boolean hasColumn(Mark m) {
@@ -349,6 +379,7 @@ public class Board {
      * 
      * @param m
      *            the mark of interest
+     *            
      * @return true if there is a diagonal which connects four marks <code>m</code>
      */
     public boolean hasDiagonal(Mark m) {
@@ -384,6 +415,7 @@ public class Board {
      *             the mark of interest
      * @param i
      *             the beginning field of the Diagonal
+     *             
      * @return true if this diagonal connects four Marks m
      */
     public boolean checkDiagonalLeftRight(Mark m, int i) {
@@ -405,7 +437,7 @@ public class Board {
     }
     
     /*@
-       requires m == Mark.XX | m == Mark.OO;
+       requires m == Mark.RED | m == Mark.BLU;
        ensures \result == this.hasRow(m) ||
                                 this.hasColumn(m) |
                                 this.hasDiagonal(m);
@@ -424,7 +456,7 @@ public class Board {
     }
 
     /*@
-       ensures \result == isWinner(Mark.XX) | \result == isWinner(Mark.OO);
+       ensures \result == isWinner(Mark.RED) | \result == isWinner(Mark.BLU);
 
      */
     /**
@@ -466,7 +498,7 @@ public class Board {
     // -- Commands ---------------------------------------------------
 
     /*@
-       ensures (\forall int i; 0 <= i & i < DIM * DIM; this.getField(i) == Mark.EMPTY);
+       ensures (\forall int i; 0 <= i & i < WIDTH * HEIGHT; this.getField(i) == Mark.XXX);
      */
     /**
      * Empties all fields of this Board (i.e., let them refer to the value

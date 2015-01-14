@@ -5,7 +5,7 @@ package Model;
  * Abstract class for a player in Connect Four.
  * 
  * 
- * @author Jan-Jaap van Raffe & Wouter Bos
+ * @author Jan-Jaap van Raffe and Wouter Bos
  * @version v1.0
  */
 public abstract class Player {
@@ -19,13 +19,18 @@ public abstract class Player {
 
     /*@
        requires theName != null;
-       requires theMark == theMark.XX || theMark == theMark.OO;
+       requires theMark == theMark.RED || theMark == theMark.BLU;
        ensures this.getName() == theName;
        ensures this.getMark() == theMark;
      */
     /**
      * Creates a new Player object.
      * 
+     * @param theName
+     *             the name of the player.
+     *             
+     * @param theMark
+     *             the mark of the player.
      */
     public Player(String theName, Mark theMark) {
         this.name = theName;
@@ -36,6 +41,8 @@ public abstract class Player {
 
     /**
      * Returns the name of the player.
+     * 
+     * @return Player name
      */
     public String getName() {
         return name;
@@ -43,6 +50,8 @@ public abstract class Player {
 
     /**
      * Returns the mark of the player.
+     * 
+     * @return Player mark
      */
     public Mark getMark() {
         return mark;
@@ -56,7 +65,7 @@ public abstract class Player {
     /**
      * Determines the field for the next move.
      * 
-     * @param bord
+     * @param board
      *            the current game board
      * @return the player's choice
      */
@@ -70,7 +79,7 @@ public abstract class Player {
     /**
      * Makes a move on the board. <br>
      * 
-     * @param bord
+     * @param board
      *            the current board
      */
     public void makeMove(Board board) {

@@ -5,7 +5,7 @@ import java.util.Scanner;
 /**
  * Class for a Human Player in Connect Four.
  * 
- * @author Jan-Jaap van Raffe & Wouter Bos
+ * @author Jan-Jaap van Raffe and Wouter Bos
  * @version v1.0
  */
 public class HumanPlayer extends Player {
@@ -20,6 +20,12 @@ public class HumanPlayer extends Player {
     */
     /**
      * Creates a new Human Player.
+     * 
+     * @param name
+     *             The name of the player
+     * 
+     * @param mark
+     *             The mark of the player
      */
     public HumanPlayer(String name, Mark mark) {
         super(name, mark);

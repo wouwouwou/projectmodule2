@@ -5,7 +5,7 @@ import java.util.*;
 /**
  *  Class for a Naive Strategy of a Computer Player.
  * 
- * @author Jan-Jaap van Raffe & Wouter Bos
+ * @author Jan-Jaap van Raffe and Wouter Bos
  * @version 1.0
  */
 public class NaiveStrategy implements Strategy {
