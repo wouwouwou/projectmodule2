@@ -43,12 +43,12 @@ public class HumanPlayer extends Player {
         String prompt = "> " + getName() + " (" + getMark().toString() + ")"
                 + ", what is your choice? ";
         int choice = readInt(prompt);
-        boolean valid = board.isField(choice) && board.isEmptyField(choice);
+        boolean valid = board.isColumn(choice) && board.isValidColumn(choice);
         while (!valid) {
             System.out.println("ERROR: field " + choice
                     + " is no valid choice.");
             choice = readInt(prompt);
-            valid = board.isField(choice) && board.isEmptyField(choice);
+            valid = board.isColumn(choice) && board.isValidColumn(choice);
         }
         return choice;
     }
@@ -72,11 +72,8 @@ public class HumanPlayer extends Player {
             if (scannerLine.hasNextInt()) {
                 intRead = true;
                 value = scannerLine.nextInt();
-                in.close();
-                scannerLine.close();
             }
         } while (!intRead);
-
         return value;
     }
 

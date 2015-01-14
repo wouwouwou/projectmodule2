@@ -21,7 +21,6 @@ public class Board {
     	"-----+-----+-----+-----+-----+-----+-----", " 28 | 29 | 30 | 31 | 32 | 33 | 34 ", 
     	"-----+-----+-----+-----+-----+-----+-----", " 35 | 36 | 37 | 38 | 39 | 40 | 41 "};
     private static final String LINE = NUMBERING[1];
-    private static final String DELIM = "     ";
 
     // -- Instance variables -----------------------------------------
 
@@ -111,6 +110,18 @@ public class Board {
     public boolean isField(int i) {
     	return (0 <= i && i < WIDTH * HEIGHT);
     }
+    
+    /*@
+    	ensures \result == (0 <= i && i < WIDTH);
+    */
+    /**
+     * Returns true if <code>i</code> is a valid column of this board
+     * @return <code>true</code> if <code>0 <= i < WIDTH</code>
+     */
+    /*@pure*/
+	public boolean isColumn(int col) {
+		return (0 <= col && col < WIDTH);
+	}
 
     /*@
        ensures \result == (0 <= row && row < WIDTH && 0 <= col && col < HEIGHT);
@@ -191,7 +202,48 @@ public class Board {
     public boolean isEmptyField(int row, int col) {
         return getField(row, col) == Mark.XXX;
     }
-
+    
+    /*@
+    	requires this.isField(i);
+    	ensures \result == (this.getField(i) == Mark.XXX);
+     */
+    /**
+     * Returns true if the column contains an empty field and is a valid move.
+     * 
+     * @param i
+     *            the index of the field (see NUMBERING)
+     * @return true if the field is empty
+     */
+    public boolean isValidColumn(int col) {
+    	int row = 0;
+    	while (row < HEIGHT) {
+    		if (getField(row, col) == Mark.XXX) {
+    			return true;
+    		}
+    		row++;
+    	}
+    	return false;
+    }
+    
+    /*@
+		requires this.isColumn(col);
+     */
+    /**
+     * When a player makes a move, this method determines the field where the Mark will be placed.
+     * 
+     * @param col
+     * @return
+     */
+    public int determineField(int col) {
+    	int row = HEIGHT - 1;
+    	while (row >= 0) {
+    		if (getField(row, col) == Mark.XXX) {
+    			break;
+    		}
+    	}
+    	return index(row, col);
+    }
+    
     /*@
        ensures \result == (\forall int i; i <= 0 & i < WIDTH * HEIGHT; this.getField(i) != Mark.XXX);
      */
