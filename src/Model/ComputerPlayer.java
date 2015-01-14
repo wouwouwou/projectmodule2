@@ -21,9 +21,9 @@ public class ComputerPlayer extends Player {
      * Creates a Computer Player with a Naive Strategy.
      * @param mark
      */
-    ComputerPlayer(Mark mark){
-	super("Naive computer -", mark);
-	strategy = new NaiveStrategy();
+    public ComputerPlayer(Mark mark){
+    	super("Naive computer -", mark);
+    	strategy = new NaiveStrategy();
     }
     
     
