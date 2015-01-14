@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.*;
+
 /**
  * Board class for the game Connect Four.
  * 
@@ -12,7 +14,7 @@ public class Board {
 
     public static final int HEIGHT = 6;
     public static final int WIDTH = 7;
-    private static final String[] NUMBERING = {" 00 | 01 | 02 | 03 | 04 | 05 | 06 ",
+    private static final String[] NUMBERING ={" 00 | 01 | 02 | 03 | 04 | 05 | 06 ",
     	"----+----+----+----+----+----+----", " 07 | 08 | 09 | 10 | 11 | 12 | 13 ",
     	"----+----+----+----+----+----+----", " 14 | 15 | 16 | 17 | 18 | 19 | 20 ", 
     	"----+----+----+----+----+----+----", " 21 | 22 | 23 | 24 | 25 | 26 | 27 ", 
@@ -63,10 +65,10 @@ public class Board {
         	Board copy = new Board();
         	int i = 0;
         	while (i < WIDTH * HEIGHT) {
-        	copy.setField(i, this.getField(i));
-        	i++;
+        		copy.setField(i, this.getField(i));
+        		i++;
         	}
-                return copy;;
+        	return copy;
     }
 
 
@@ -81,9 +83,23 @@ public class Board {
     public int index(int row, int col) {
     	int i = (7*row) + col;
         return i;
-    }Moet nog naar gekeken worden
-
-
+    }
+    
+    /*@
+    	requires 0 <= i & i < WIDTH * HEIGHT;
+     */
+    /**
+     * Calculates the row and the col of the field from an index. Returns it in an int[].
+     * int[0] should return the col. int[1] should return the row.
+     * @return the col and the row of the field with index i.
+     */
+    public int[] getRowCol(int i) {
+    	int col = i%7;
+    	int row = (i - col) / 7;
+    	int[] res = new int[]{row, col};
+    	return res;
+    }
+    
     /*@
        ensures \result == (0 <= ix && ix < WIDTH * HEIGHT);
      */
@@ -139,7 +155,7 @@ public class Board {
      * @return the mark on the field
      */
     public Mark getField(int row, int col) {
-    	return fields[index(row, col)];extra naar kijken
+    	return fields[index(row, col)];
     }
 
     /*@
@@ -191,7 +207,7 @@ public class Board {
     	    if (getField(i) == Mark.XXX) {
     		return false;
     	    }
-    	    i = i + 1;
+    	    i++;
     	}
     	return true;
     }
@@ -242,6 +258,27 @@ public class Board {
      * @return true if there is a column which connects four marks <code>m</code>
      */
     public boolean hasColumn(Mark m) {
+    	int col = 0;
+    	while (col < WIDTH) {
+    		int row = 0;
+    		int counter = 0;
+    		while (row < HEIGHT) {
+    			if (getField(row, col) == m) {
+    				counter++;
+    			}
+    			if (getField(row, col) != m) {
+    				counter = 0;
+    			}
+    			if (counter == 4) {
+    				return true;
+    			}
+    			if ((HEIGHT - row) > 4 - counter) {
+    				break;
+    			}
+    			row++;
+    		}
+    		col++;
+    	}
     	return false;
     }
 
@@ -255,7 +292,35 @@ public class Board {
     public boolean hasDiagonal(Mark m) {
     	return false;
     }
-
+    
+    /**
+     * Checks whether the given Diagonal at field[i] from the top left to the
+     * bottom right of the Board connects four Marks m.
+     * 
+     * @param m
+     *             the mark of interest
+     * @param i
+     *             the beginning field of the Diagonal
+     * @return true if this diagonal connects four Marks m
+     */
+    public boolean checkDiagonalLeftRight(Mark m, int i) {
+    	return (getField(i) == m && getField(i+8) == m && getField(i+16) == m && getField(i+24) == m);
+    }
+    
+    /**
+     * Checks whether the given Diagonal at field[i] from the top right to the
+     * bottom left of the Board connects four Marks m.
+     * 
+     * @param m
+     *             the mark of interest
+     * @param i
+     *             the beginning field of the Diagonal
+     * @return true if this diagonal connects four Marks m
+     */
+    public boolean checkDiagonalRightLeft(Mark m, int i) {
+    	return (getField(i) == m && getField(i+6) == m && getField(i+12) == m && getField(i+18) == m);
+    }
+    
     /*@
        requires m == Mark.XX | m == Mark.OO;
        ensures \result == this.hasRow(m) ||
