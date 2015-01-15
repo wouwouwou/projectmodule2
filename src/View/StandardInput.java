@@ -7,7 +7,7 @@ import Model.Mark;
 import Model.Player;
 import Model.SmartStrategy;
 
-public class ConnectFour {
+public class StandardInput {
 
     public static void main(String[] args) {
     	if (args.length == 2) {

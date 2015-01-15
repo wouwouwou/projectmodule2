@@ -4,7 +4,7 @@ package Model;
  * Board class for the game Connect Four.
  * 
  * @author Jan-Jaap van Raffe and Wouter Bos
- * @version 1.1
+ * @version 1.2
  */
 public class Board {
 
@@ -77,10 +77,13 @@ public class Board {
      */
     /**
      * Calculates the index in the linear array of fields from a (row, col) pair.
+     * 
      * @param row
-     *             the row
+     * the row
+     *             
      * @param col
-     *             the column
+     * the column
+     *             
      * @return the index belonging to the (row,col)-field
      */
     public int index(int row, int col) {
@@ -96,7 +99,7 @@ public class Board {
      * int[0] should return the col. int[1] should return the row.
      * 
      * @param i
-     *             the index of the field.
+     * the index of the field.
      * 
      * @return the col and the row of the field with index i.
      */
@@ -114,7 +117,7 @@ public class Board {
      * Returns true if <code>i</code> is a valid index of a field on the student.
      * 
      * @param i
-     *             the index of the field.
+     * the index of the field.
      * 
      * @return <code>true</code> if <code>0 <= i < HEIGHT * WIDTH</code>
      */
@@ -130,7 +133,7 @@ public class Board {
      * Returns true if <code>i</code> is a valid column of this board.
      * 
      * @param col
-     *             the column
+     * the column
      * 
      * @return <code>true</code> if <code>0 <= i < WIDTH</code>
      */
@@ -146,10 +149,10 @@ public class Board {
      * Returns true of the (row,col) pair refers to a valid field on the student.
      * 
      * @param row
-     *             the row
+     * the row
      * 
      * @param col
-     *             the column
+     * the column
      * 
      * @return true if <code>0 <= row < HEIGHT && 0 <= col < WIDTH</code>
      */
@@ -167,7 +170,7 @@ public class Board {
      * Returns the content of the field <code>i</code>.
      * 
      * @param i
-     *            the number of the field (see NUMBERING)
+     * the number of the field (see NUMBERING)
      *            
      * @return the mark on the field
      */
@@ -183,9 +186,11 @@ public class Board {
      * Returns the content of the field referred to by the (row,col) pair.
      * 
      * @param row
-     *            the row of the field
+     * the row of the field
+     *            
      * @param col
-     *            the column of the field
+     * the column of the field
+     *            
      * @return the mark on the field
      */
     public Mark getField(int row, int col) {
@@ -200,7 +205,8 @@ public class Board {
      * Returns true if the field <code>i</code> is empty.
      * 
      * @param i
-     *            the index of the field (see NUMBERING)
+     * the index of the field (see NUMBERING)
+     *            
      * @return true if the field is empty
      */
     public boolean isEmptyField(int i) {
@@ -216,9 +222,11 @@ public class Board {
      * Returns true if the field referred to by the (row,col) pair it empty.
      * 
      * @param row
-     *            the row of the field
+     * the row of the field
+     *            
      * @param col
-     *            the column of the field
+     * the column of the field
+     *            
      * @return true if the field is empty
      */
     /*@pure*/
@@ -233,7 +241,7 @@ public class Board {
      * Returns true if the column contains an empty field and is a valid move.
      * 
      * @param col
-     *            the column
+     * the column
      *
      * @return true if the column contains an empty field
      */
@@ -255,7 +263,7 @@ public class Board {
      * When a player makes a move, this method determines the field where the Mark will be placed.
      * 
      * @param col
-     *             the column
+     * the column
      * 
      * @return lowest field on the board. (highest index, highest row)
      */
@@ -309,7 +317,7 @@ public class Board {
      * Checks whether there is a row which connects four marks <code>m</code>.
      * 
      * @param m
-     *            the mark of interest
+     * the mark of interest
      *
      * @return true if there is a row which connects four marks <code>m</code>
      */
@@ -342,7 +350,7 @@ public class Board {
      * Checks whether there is a column which connects four marks <code>m</code>.
      * 
      * @param m
-     *            the mark of interest
+     * the mark of interest
      *            
      * @return true if there is a column which connects four marks <code>m</code>
      */
@@ -375,7 +383,7 @@ public class Board {
      * Checks whether there is a diagonal which connects four marks <code>m</code>.
      * 
      * @param m
-     *            the mark of interest
+     * the mark of interest
      *            
      * @return true if there is a diagonal which connects four marks <code>m</code>
      */
@@ -409,9 +417,10 @@ public class Board {
      * bottom right of the Board connects four Marks m.
      * 
      * @param m
-     *             the mark of interest
+     * the mark of interest
+     *             
      * @param i
-     *             the beginning field of the Diagonal
+     * the beginning field of the Diagonal
      *             
      * @return true if this diagonal connects four Marks m
      */
@@ -424,9 +433,11 @@ public class Board {
      * bottom left of the Board connects four Marks m.
      * 
      * @param m
-     *             the mark of interest
+     * the mark of interest
+     *             
      * @param i
-     *             the beginning field of the Diagonal
+     * the beginning field of the Diagonal
+     *             
      * @return true if this diagonal connects four Marks m
      */
     public boolean checkDiagonalRightLeft(Mark m, int i) {
@@ -444,7 +455,8 @@ public class Board {
      * vertically, horizontally or diagonally
      * 
      * @param m
-     *            the mark of interest
+     * the mark of interest
+     *            
      * @return true if the mark has won
      */
     /*@pure*/
@@ -515,9 +527,10 @@ public class Board {
      * Sets the content of field <code>i</code> to the mark <code>m</code>.
      * 
      * @param i
-     *            the field number (see NUMBERING)
+     * the field number (see NUMBERING)
+     *            
      * @param m
-     *            the mark to be placed
+     * the mark to be placed
      */
     public void setField(int i, Mark m) {
     	fields[i] = m;
@@ -533,11 +546,13 @@ public class Board {
      * mark <code>m</code>.
      * 
      * @param row
-     *            the field's row
+     * the field's row
+     *            
      * @param col
-     *            the field's column
+     * the field's column
+     *            
      * @param m
-     *            the mark to be placed
+     *the mark to be placed
      */
     public void setField(int row, int col, Mark m) {
     	fields[index(row, col)] = m;
