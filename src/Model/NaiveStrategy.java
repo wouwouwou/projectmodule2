@@ -29,16 +29,16 @@ public class NaiveStrategy implements Strategy {
      */
     @Override
     public int determineMove(Board b, Mark m) {
-	Set<Integer> emptyFields = new HashSet<Integer>();
+	Set<Integer> emptyColumns = new HashSet<Integer>();
 	int i = 0;
-	while (b.isField(i)) {
-	    if (b.isEmptyField(i)) {
-		emptyFields.add(i);
+	while (b.isColumn(i)) {
+	    if (b.isValidColumn(i)) {
+		emptyColumns.add(i);
 	    }
 	    i = i + 1;
 	}
-	int index = (int)Math.round((emptyFields.size() - 1) * Math.random());
-	Integer[] array = emptyFields.toArray(new Integer[emptyFields.size()]);
+	int index = (int)Math.round((emptyColumns.size() - 1) * Math.random());
+	Integer[] array = emptyColumns.toArray(new Integer[emptyColumns.size()]);
 	return array[index];
     }
 

@@ -114,7 +114,7 @@ public class Board {
        ensures \result == (0 <= i && i < WIDTH * HEIGHT);
      */
     /**
-     * Returns true if <code>i</code> is a valid index of a field on the student.
+     * Returns true if <code>i</code> is a valid index of a field on this Board.
      * 
      * @param i
      * the index of the field.
@@ -146,7 +146,7 @@ public class Board {
        ensures \result == (0 <= row && row < WIDTH && 0 <= col && col < HEIGHT);
      */
     /**
-     * Returns true of the (row,col) pair refers to a valid field on the student.
+     * Returns true of the (row,col) pair refers to a valid field on this Board.
      * 
      * @param row
      * the row
@@ -480,7 +480,7 @@ public class Board {
     }
 
     /**
-     * Returns a String representation of this student. In addition to the current
+     * Returns a String representation of this Board. In addition to the current
      * situation, the String also shows the numbering of the columns.
      * 
      * @return the game situation as String
