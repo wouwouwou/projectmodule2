@@ -1,7 +1,5 @@
 package Model;
 
-import Model.*;
-import Controller.*;
 
 /**
  * Abstract class for a player in Connect Four.
@@ -84,9 +82,9 @@ public abstract class Player {
      * @param board
      *            the current board
      */
-    public void makeMove(Board board, Game game) {
+    public void makeMove(Board board) {
     	int choice = determineMove(board);
-    	int i = game.determineField(choice);
+    	int i = board.determineField(choice);
     	board.setField(i, getMark());
     }
 
