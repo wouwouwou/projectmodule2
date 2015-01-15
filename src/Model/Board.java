@@ -70,7 +70,6 @@ public class Board {
             return copy;
     }
 
-
     /*@
        requires 0 <= row & row < WIDTH;
        requires 0 <= col & col < HEIGHT;
@@ -78,9 +77,11 @@ public class Board {
     /**
      * Calculates the index in the linear array of fields from a (row, col) pair.
      * @param row
-     *             the row
+     * the row
+     * 
      * @param col
-     *             the column
+     * the column
+     * 
      * @return the index belonging to the (row,col)-field
      */
     public int index(int row, int col) {
@@ -96,7 +97,7 @@ public class Board {
      * int[0] should return the col. int[1] should return the row.
      * 
      * @param i
-     *             the index of the field.
+     * the index of the field.
      * 
      * @return the col and the row of the field with index i.
      */
@@ -111,10 +112,10 @@ public class Board {
        ensures \result == (0 <= i && i < WIDTH * HEIGHT);
      */
     /**
-     * Returns true if <code>i</code> is a valid index of a field on the student.
+     * Returns true if <code>i</code> is a valid index of a field on this Board.
      * 
      * @param i
-     *             the index of the field.
+     * the index of the field.
      * 
      * @return <code>true</code> if <code>0 <= i < HEIGHT * WIDTH</code>
      */
@@ -122,34 +123,18 @@ public class Board {
     public boolean isField(int i) {
     	return (0 <= i && i < WIDTH * HEIGHT);
     }
-    
-    /*@
-    	ensures \result == (0 <= col && col < WIDTH);
-    */
-    /**
-     * Returns true if <code>i</code> is a valid column of this board.
-     * 
-     * @param col
-     *             the column
-     * 
-     * @return <code>true</code> if <code>0 <= i < WIDTH</code>
-     */
-    /*@pure*/
-	public boolean isColumn(int col) {
-		return (0 <= col && col < WIDTH);
-	}
 
     /*@
        ensures \result == (0 <= row && row < WIDTH && 0 <= col && col < HEIGHT);
      */
     /**
-     * Returns true of the (row,col) pair refers to a valid field on the student.
+     * Returns true of the (row,col) pair refers to a valid field on this Board.
      * 
      * @param row
-     *             the row
+     * the row of the field which has to be tested
      * 
      * @param col
-     *             the column
+     * the column of the field which has to be tested
      * 
      * @return true if <code>0 <= row < HEIGHT && 0 <= col < WIDTH</code>
      */
@@ -157,7 +142,6 @@ public class Board {
     public boolean isField(int row, int col) {
         return (0 <= row && row < HEIGHT && 0 <= col && col < WIDTH);
     }
-
 
     /*@
        requires this.isField(i);
@@ -167,7 +151,7 @@ public class Board {
      * Returns the content of the field <code>i</code>.
      * 
      * @param i
-     *            the number of the field (see NUMBERING)
+     * the number of the field (see NUMBERING)
      *            
      * @return the mark on the field
      */
@@ -183,9 +167,11 @@ public class Board {
      * Returns the content of the field referred to by the (row,col) pair.
      * 
      * @param row
-     *            the row of the field
+     * the row of the field
+     * 
      * @param col
-     *            the column of the field
+     * the column of the field
+     *            
      * @return the mark on the field
      */
     public Mark getField(int row, int col) {
@@ -200,7 +186,8 @@ public class Board {
      * Returns true if the field <code>i</code> is empty.
      * 
      * @param i
-     *            the index of the field (see NUMBERING)
+     * the index of the field (see NUMBERING)
+     * 
      * @return true if the field is empty
      */
     public boolean isEmptyField(int i) {
@@ -216,9 +203,11 @@ public class Board {
      * Returns true if the field referred to by the (row,col) pair it empty.
      * 
      * @param row
-     *            the row of the field
+     * the row of the field
+     * 
      * @param col
-     *            the column of the field
+     * the column of the field
+     * 
      * @return true if the field is empty
      */
     /*@pure*/
@@ -227,17 +216,33 @@ public class Board {
     }
     
     /*@
+	ensures \result == (0 <= col && col < WIDTH);
+     */
+    /**
+     * Returns true if <code>i</code> is a valid column of this board.
+     * 
+     * @param col
+     * the column to be tested
+     * 
+     * @return <code>true</code> if <code>0 <= i < WIDTH</code>
+     */
+    /*@pure*/
+    public boolean isColumn(int col) {
+    	return (0 <= col && col < WIDTH);
+    }
+    
+    /*@
     	requires this.isColumn(col);
      */
     /**
-     * Returns true if the column contains an empty field and is a valid move.
+     * Returns true if the given column contains an empty field.
      * 
      * @param col
-     *            the column
+     * the column to be tested
      *
      * @return true if the column contains an empty field
      */
-    public boolean isValidColumn(int col) {
+    public boolean containsEmptyField(int col) {
     	int row = 0;
     	while (row < HEIGHT) {
     		if (getField(row, col) == Mark.XXX) {
@@ -247,29 +252,7 @@ public class Board {
     	}
     	return false;
     }
-    
-    /*@
-		requires this.isColumn(col);
-     */
-    /**
-     * When a player makes a move, this method determines the field where the Mark will be placed.
-     * 
-     * @param col
-     *             the column
-     * 
-     * @return lowest field on the board. (highest index, highest row)
-     */
-    public int determineField(int col) {
-    	int row = HEIGHT - 1;
-    	while (row >= 0) {
-    		if (getField(row, col) == Mark.XXX) {
-    			break;
-    		}
-    		row--;
-    	}
-    	return index(row, col);
-    }
-    
+        
     /*@
        ensures \result == (\forall int i; i <= 0 & i < WIDTH * HEIGHT; this.getField(i) != Mark.XXX);
      */
@@ -290,26 +273,11 @@ public class Board {
     	return true;
     }
 
-    /*@
-       ensures \result == this.isFull() || this.hasWinner();
-
-     */
-    /**
-     * Returns true if the game is over. The game is over when there is a winner
-     * or the whole Board is full.
-     * 
-     * @return true if the game is over
-     */
-    /*@pure*/
-    public boolean gameOver() {
-    	return (isFull() || hasWinner());
-    }
-
     /**
      * Checks whether there is a row which connects four marks <code>m</code>.
      * 
      * @param m
-     *            the mark of interest
+     * the mark of interest
      *
      * @return true if there is a row which connects four marks <code>m</code>
      */
@@ -342,7 +310,7 @@ public class Board {
      * Checks whether there is a column which connects four marks <code>m</code>.
      * 
      * @param m
-     *            the mark of interest
+     * the mark of interest
      *            
      * @return true if there is a column which connects four marks <code>m</code>
      */
@@ -375,7 +343,7 @@ public class Board {
      * Checks whether there is a diagonal which connects four marks <code>m</code>.
      * 
      * @param m
-     *            the mark of interest
+     * the mark of interest
      *            
      * @return true if there is a diagonal which connects four marks <code>m</code>
      */
@@ -409,9 +377,10 @@ public class Board {
      * bottom right of the Board connects four Marks m.
      * 
      * @param m
-     *             the mark of interest
+     * the mark of interest
+     * 
      * @param i
-     *             the beginning field of the Diagonal
+     * the beginning field of the Diagonal
      *             
      * @return true if this diagonal connects four Marks m
      */
@@ -424,9 +393,11 @@ public class Board {
      * bottom left of the Board connects four Marks m.
      * 
      * @param m
-     *             the mark of interest
+     * the mark of interest
+     * 
      * @param i
-     *             the beginning field of the Diagonal
+     * the beginning field of the Diagonal
+     * 
      * @return true if this diagonal connects four Marks m
      */
     public boolean checkDiagonalRightLeft(Mark m, int i) {
@@ -454,7 +425,6 @@ public class Board {
 
     /*@
        ensures \result == isWinner(Mark.RED) | \result == isWinner(Mark.BLU);
-
      */
     /**
      * Returns true if the game has a winner. This is the case when one of the
@@ -468,7 +438,7 @@ public class Board {
     }
 
     /**
-     * Returns a String representation of this student. In addition to the current
+     * Returns a String representation of this Board. In addition to the current
      * situation, the String also shows the numbering of the columns.
      * 
      * @return the game situation as String
@@ -515,9 +485,10 @@ public class Board {
      * Sets the content of field <code>i</code> to the mark <code>m</code>.
      * 
      * @param i
-     *            the field number (see NUMBERING)
+     * the field number (see NUMBERING)
+     *            
      * @param m
-     *            the mark to be placed
+     * the mark to be placed
      */
     public void setField(int i, Mark m) {
     	fields[i] = m;
@@ -533,14 +504,15 @@ public class Board {
      * mark <code>m</code>.
      * 
      * @param row
-     *            the field's row
+     * the field's row
+     *            
      * @param col
-     *            the field's column
+     * the field's column
+     *            
      * @param m
-     *            the mark to be placed
+     * the mark to be placed        
      */
     public void setField(int row, int col, Mark m) {
     	fields[index(row, col)] = m;
     }
-
 }

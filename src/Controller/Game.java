@@ -1,9 +1,8 @@
 package Controller;
 
 import java.util.Scanner;
-
-import Model.Board;
-import Model.Player;
+import Model.*;
+import View.*;
 
 /**
  * Controller class for the Connect Four game. 
@@ -52,9 +51,10 @@ public class Game {
      * Creates a new Game object.
      * 
      * @param p0
-     *            the first player
+     * the first player
+     *            
      * @param p1
-     *            the second player
+     * the second player
      */
     public Game(Player p0, Player p1) {
         board = new Board();
@@ -76,32 +76,8 @@ public class Game {
         while (doorgaan) {
             reset();
             play();
-            doorgaan = readBoolean("\n> Play another time? (y/n)?", "y", "n");
+            doorgaan = StandardInput.readBoolean("\n> Play another time? (y/n)?", "y", "n");
         }
-    }
-
-    /**
-     * Prints a question which can be answered by yes (true) or no (false).
-     * After prompting the question on standard out, this method reads a String
-     * from standard in and compares it to the parameters for yes and no. If the
-     * user inputs a different value, the prompt is repeated and the method reads
-     * input again.
-     * 
-     * @parom prompt the question to print
-     * @param yes
-     *            the String corresponding to a yes answer
-     * @param no
-     *            the String corresponding to a no answer
-     * @return true is the yes answer is typed, false if the no answer is typed
-     */
-    private boolean readBoolean(String prompt, String yes, String no) {
-        String answer;
-        do {
-            System.out.print(prompt);
-            Scanner in = new Scanner(System.in);
-            answer = in.hasNextLine() ? in.nextLine() : null;
-        } while (answer == null || (!answer.equals(yes) && !answer.equals(no)));
-        return answer.equals(yes);
     }
 
     /**
@@ -122,14 +98,50 @@ public class Game {
     private void play() {
         this.showBoard();
         do {
-            players[current].makeMove(board);
+            players[current].makeMove(board, this);
             this.showBoard();
             current = (current+1)%2;
         } while (!board.hasWinner() && !board.isFull());
         this.printResult();
     }
+    
 
-
+    /*@
+		requires getBoard().isColumn(col);
+     */
+    /**
+     * When a player makes a move, this method determines the field where the Mark will be placed.
+     * 
+     * @param col
+     * the column which is given by a player
+     * 
+     * @return lowest field on the board. (highest index, highest row)
+     */
+    public int determineField(int col) {
+    	int row = Board.HEIGHT - 1;
+    	while (row >= 0) {
+    		if (board.getField(row, col) == Mark.XXX) {
+    			break;
+    		}
+    		row--;
+    	}
+    	return board.index(row, col);
+    }
+    
+    /*@
+    	ensures \result == getBoard.isFull() || getBoard().hasWinner();
+     */
+    /**
+     * Returns true if the game is over. The game is over when there is a winner
+     * or the whole Board is full.
+     * 
+     * @return true if the game is over
+     */
+    /*@pure*/
+    public boolean gameOver() {
+    	return (board.isFull() || board.hasWinner());
+    }
+    
     /**
      * Prints the game situation.
      */
@@ -139,7 +151,7 @@ public class Game {
     }
 
     /*@
-       requires this.board.gameOver();
+       requires getBoard().gameOver();
      */
     /**
      * Prints the result of the last game. <br>
@@ -153,5 +165,15 @@ public class Game {
         } else {
             System.out.println("Draw. There is no winner!");
         }
+    }
+    
+    /**
+     * Returns the current board of this game.
+     * 
+     * @return board of this game.
+     */
+    /*@pure*/
+    private Board getBoard() {
+    	return board;
     }
 }
