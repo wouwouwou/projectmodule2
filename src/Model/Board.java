@@ -495,17 +495,17 @@ public class Board {
     // -- Commands ---------------------------------------------------
 
     /*@
-       ensures (\forall int i; 0 <= i & i < WIDTH * HEIGHT; this.getField(i) == Mark.XXX);
+     	ensures (\forall int i; 0 <= i & i < WIDTH * HEIGHT; this.getField(i) == Mark.XXX);
      */
     /**
-     * Empties all fields of this Board (i.e., let them refer to the value
-     * Mark.XXX).
-     */
+  	* Empties all fields of this Board (i.e., let them refer to the value
+  	* Mark.XXX).
+  	*/
     public void reset() {
-        for (int i = 0; i < WIDTH * HEIGHT; i++) {
-            fields[i] = Mark.XXX;
-        }
-    }
+     	for (int i = 0; i < WIDTH * HEIGHT; i++) {
+         	fields[i] = Mark.XXX;
+     	}
+ 	}
 
     /*@
        requires this.isField(i);
