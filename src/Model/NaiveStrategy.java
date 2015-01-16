@@ -32,7 +32,7 @@ public class NaiveStrategy implements Strategy {
 	Set<Integer> emptyColumns = new HashSet<Integer>();
 	int i = 0;
 	while (b.isColumn(i)) {
-	    if (b.isValidColumn(i)) {
+	    if (b.containsEmptyColumn(i)) {
 		emptyColumns.add(i);
 	    }
 	    i = i + 1;

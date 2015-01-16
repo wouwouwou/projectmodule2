@@ -103,12 +103,16 @@ public class Board {
      * 
      * @return the col and the row of the field with index i.
      */
+    /* Method isn't used yet. Outcommented for a while.
+
     public int[] getRowCol(int i) {
     	int col = i%7;
     	int row = (i - col) / 7;
     	int[] res = new int[]{row, col};
     	return res;
     }
+    
+    */
     
     /*@
        ensures \result == (0 <= i && i < WIDTH * HEIGHT);
@@ -125,22 +129,6 @@ public class Board {
     public boolean isField(int i) {
     	return (0 <= i && i < WIDTH * HEIGHT);
     }
-    
-    /*@
-    	ensures \result == (0 <= col && col < WIDTH);
-    */
-    /**
-     * Returns true if <code>i</code> is a valid column of this board.
-     * 
-     * @param col
-     * the column
-     * 
-     * @return <code>true</code> if <code>0 <= i < WIDTH</code>
-     */
-    /*@pure*/
-	public boolean isColumn(int col) {
-		return (0 <= col && col < WIDTH);
-	}
 
     /*@
        ensures \result == (0 <= row && row < WIDTH && 0 <= col && col < HEIGHT);
@@ -235,17 +223,33 @@ public class Board {
     }
     
     /*@
+    	ensures \result == (0 <= col && col < WIDTH);
+    */
+    /**
+     * Returns true if <code>i</code> is a valid column of this board.
+     * 
+     * @param col
+     * the column
+     * 
+     * @return <code>true</code> if <code>0 <= i < WIDTH</code>
+     */
+    /*@pure*/
+	public boolean isColumn(int col) {
+		return (0 <= col && col < WIDTH);
+	}
+    
+    /*@
     	requires this.isColumn(col);
      */
     /**
-     * Returns true if the column contains an empty field and is a valid move.
+     * Returns true if the column contains an empty field.
      * 
      * @param col
      * the column
      *
      * @return true if the column contains an empty field
      */
-    public boolean isValidColumn(int col) {
+    public boolean containsEmptyColumn(int col) {
     	int row = 0;
     	while (row < HEIGHT) {
     		if (getField(row, col) == Mark.XXX) {
