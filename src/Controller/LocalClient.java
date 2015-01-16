@@ -11,7 +11,7 @@ import Model.Player;
  * @author Jan-Jaap van Raffe and Wouter Bos
  * @version v1.0
  */
-public class Game {
+public class LocalClient extends Thread {
 
     // -- Instance variables -----------------------------------------
 
@@ -56,7 +56,7 @@ public class Game {
      * @param p1
      *            the second player
      */
-    public Game(Player p0, Player p1) {
+    public LocalClient(Player p0, Player p1) {
         board = new Board();
         players = new Player[NUMBER_PLAYERS];
         players[0] = p0;

@@ -1,6 +1,6 @@
 package View;
 
-import Controller.Game;
+import Controller.LocalClient;
 import Model.ComputerPlayer;
 import Model.HumanPlayer;
 import Model.Mark;
@@ -35,7 +35,7 @@ public class StandardInput {
     		if (p2 == null) {
     			p2 = new HumanPlayer(args[1], Mark.BLU);
     		}
-    		Game game = new Game(p1, p2);
+    		LocalClient game = new LocalClient(p1, p2);
     		game.start();
     	}
     }
