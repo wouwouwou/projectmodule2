@@ -9,7 +9,7 @@ import model.Mark;
 import model.Player;
 import model.SmartStrategy;
 
-public class StandardInput {
+public class LocalMode extends Thread {
 	
 	/**
      * Prints a question which can be answered by yes (true) or no (false).
@@ -64,8 +64,33 @@ public class StandardInput {
         } while (answer == null || (!answer.equals(option1) && !answer.equals(option2)));
         return answer;
     }
+    
+    private String getName(String prompt) {
+    	String res;
+    	do {
+			System.out.print(prompt);
+			Scanner in = new Scanner(System.in);
+    		res = in.hasNextLine() ? in.nextLine() : null;
+		} while (res == null);
+    	return res;
+    }
+    
+    private String[] getPlayers() {
+    	String[] args = new String[2]; 
+    	String human = readChoice("> Do you want to play against an AI or against another human player? (ai/human)?", "ai", "human");
+    	if (human.equals("human")) {
+    		args[0] = getName("> Player 1, what is your name?");
+    		args[1] = getName("> Player 2, what is your name?");
+    	}
+    	else {
+    		args[0] = getName("> What is your name?");
+    		args[1] = "-N";
+    	}
+    	return args;
+    }
 
-    public static void main(String[] args) {
+    public void run() {
+    	String[] args = getPlayers();
     	if (args.length == 2) {
     		Player p1 = null;
     		Player p2 = null;
