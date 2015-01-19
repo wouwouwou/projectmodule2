@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 /**
  * Board class for the game Connect Four.

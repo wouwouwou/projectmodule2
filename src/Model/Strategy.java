@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 /**
  *  Interface for a Strategy of a Computer Player.

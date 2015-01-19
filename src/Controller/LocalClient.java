@@ -1,9 +1,10 @@
-package Controller;
+package controller;
 
 import java.util.Scanner;
 
-import Model.Board;
-import Model.Player;
+import model.Board;
+import model.Player;
+import view.StandardInput;
 
 /**
  * Controller class for the Connect Four game. 
@@ -76,32 +77,8 @@ public class LocalClient extends Thread {
         while (doorgaan) {
             reset();
             play();
-            doorgaan = readBoolean("\n> Play another time? (y/n)?", "y", "n");
+            doorgaan = StandardInput.readBoolean("\n> Play another time? (y/n)?", "y", "n");
         }
-    }
-
-    /**
-     * Prints a question which can be answered by yes (true) or no (false).
-     * After prompting the question on standard out, this method reads a String
-     * from standard in and compares it to the parameters for yes and no. If the
-     * user inputs a different value, the prompt is repeated and the method reads
-     * input again.
-     * 
-     * @parom prompt the question to print
-     * @param yes
-     *            the String corresponding to a yes answer
-     * @param no
-     *            the String corresponding to a no answer
-     * @return true is the yes answer is typed, false if the no answer is typed
-     */
-    private boolean readBoolean(String prompt, String yes, String no) {
-        String answer;
-        do {
-            System.out.print(prompt);
-            Scanner in = new Scanner(System.in);
-            answer = in.hasNextLine() ? in.nextLine() : null;
-        } while (answer == null || (!answer.equals(yes) && !answer.equals(no)));
-        return answer.equals(yes);
     }
 
     /**

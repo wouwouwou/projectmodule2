@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 /**
  * Represents a mark in the Connect Four game. There are three possible values:

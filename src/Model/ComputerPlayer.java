@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 /**
  *  Class for a Computer Player in Connect Four.
