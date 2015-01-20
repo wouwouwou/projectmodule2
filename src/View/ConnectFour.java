@@ -11,7 +11,7 @@ package view;
 public class ConnectFour {
 	
 	private static void playGame() {
-		String playmode = StandardInput.readChoice("> Do you want to play in local-mode or in multiplayer-mode? (local/multi)?", "local", "multi");
+		String playmode = StandardInput.readChoice("\n> Do you want to play in local-mode or in multiplayer-mode? (local/multi)? \n", "local", "multi");
 		if (playmode.equals("local")) {
 			Thread play = new LocalMode();
 			play.start();
@@ -35,9 +35,9 @@ public class ConnectFour {
 	}
 	
 	public static void main(String[] args) {
-		String server = StandardInput.readChoice("> Do you want to start a server, or do you want to play? (server/play)?", "server", "play");
-		if (server.equals("server")) {
-			Thread server = new Server();
+		String start = StandardInput.readChoice("\n> Do you want to start a server, or do you want to play? (server/play)? \n", "server", "play");
+		if (start.equals("server")) {
+			Thread server = new ServerView();
 			server.start();
 		}
 		else {

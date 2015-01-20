@@ -8,6 +8,11 @@ package controller;
  * 
  */
 
-public class Server extends Thread {
-
+public class ServerController extends Thread {
+	
+	public void run() {
+		
+	}
+	
+	
 }
