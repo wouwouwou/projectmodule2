@@ -14,7 +14,7 @@ import model.SmartStrategy;
  * @version v1.0
  */
 
-public class LocalMode extends Thread {
+public class LocalMode implements Runnable{
     
     private String[] getPlayers() {
     	String[] args = new String[2]; 
@@ -59,12 +59,6 @@ public class LocalMode extends Thread {
     		}
     		LocalGame game = new LocalGame(p1, p2);
     		game.start();
-    		try {
-    			game.join();
-    		} catch (InterruptedException e) {
-    			System.out.println(e.getMessage());
-    			e.printStackTrace();
-    		}
     	}
     }
 }

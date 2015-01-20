@@ -103,7 +103,7 @@ public class StandardInput {
 			System.out.print(prompt);
 			Scanner in = new Scanner(System.in);
     		res = in.hasNextLine() ? in.nextLine() : null;
-		} while (!res.equals(""));
+		} while (res.equals(""));
     	return res;
     }
 	

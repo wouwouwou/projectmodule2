@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
 /**
  * Server for the ConnectFour game
@@ -15,6 +16,11 @@ import java.net.Socket;
 public class Server extends Thread {
 	
 	private ServerSocket serversock;
+	private List<ClientHandler> clients;
+	
+	private void addClient(ClientHandler client) {
+		clients.add(client);
+	}
 	
 	public void run() {
 		try {
@@ -23,6 +29,9 @@ public class Server extends Thread {
 			System.out.println("Server hostname: " + serversock.getInetAddress().getHostName() + " | Server IP : " + serversock.getInetAddress().getHostAddress());
 			while(true) {
 				Socket sock = serversock.accept();
+				ClientHandler handler = new ClientHandler(this, sock);
+				handler.start();
+				addClient(handler);
 			}
 		} catch (IOException e) {
 			System.out.println(e.getMessage());

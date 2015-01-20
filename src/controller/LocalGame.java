@@ -11,7 +11,7 @@ import view.StandardInput;
  * @version v1.0
  */
 
-public class LocalGame extends Thread {
+public class LocalGame {
 
     // -- Instance variables -----------------------------------------
 
