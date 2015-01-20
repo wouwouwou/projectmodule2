@@ -5,6 +5,7 @@ import java.util.Scanner;
 import model.Board;
 import model.Player;
 import view.LocalMode;
+import view.StandardInput;
 
 /**
  * Local controller class for the Connect Four game. 
@@ -78,7 +79,7 @@ public class LocalGame extends Thread {
         while (doorgaan) {
             reset();
             play();
-            doorgaan = LocalMode.readBoolean("\n> Play another time? (y/n)?", "y", "n");
+            doorgaan = StandardInput.readBoolean("\n> Play another time? (y/n)?", "y", "n");
         }
     }
 
