@@ -7,11 +7,12 @@ import model.Player;
 import view.LocalMode;
 
 /**
- * Controller class for the Connect Four game. 
+ * Local controller class for the Connect Four game. 
  * 
  * @author Jan-Jaap van Raffe and Wouter Bos
  * @version v1.0
  */
+
 public class LocalClient extends Thread {
 
     // -- Instance variables -----------------------------------------

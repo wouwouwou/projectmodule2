@@ -9,6 +9,13 @@ import model.Mark;
 import model.Player;
 import model.SmartStrategy;
 
+/**
+ * View for playing the game in Local mode.
+ * 
+ * @author Jan-Jaap van Raffe and Wouter Bos
+ * @version v1.0
+ */
+
 public class LocalMode extends Thread {
 	
 	/**
@@ -39,13 +46,14 @@ public class LocalMode extends Thread {
     }
     
     /**
-     * Prints a question which can be answered two options.
+     * Prints a question which can be answered with two options.
      * After prompting the question on standard out, this method reads a String
      * from standard in and compares it to the parameters for the two options. If the
      * user inputs a different value, the prompt is repeated and the method reads
      * input again.
      * 
-     * @param prompt the question to print
+     * @param prompt 
+     * the question to print
      * 
      * @param option1
      * the String corresponding to the first option
@@ -53,7 +61,7 @@ public class LocalMode extends Thread {
      * @param option2
      * the String corresponding to the second option
      * 
-     * @return true is the yes answer is typed, false if the no answer is typed
+     * @return the option typed.
      */
     public static String readChoice(String prompt, String option1, String option2) {
         String answer;
@@ -65,7 +73,17 @@ public class LocalMode extends Thread {
         return answer;
     }
     
-    private String getName(String prompt) {
+    /**
+     * Prints a question which can be answered with a String.
+     * After prompting the question on standard out, this method reads a String
+     * from standard in and gives it back to the caller.
+     * 
+     * @param prompt
+     * the question to print.
+     * 
+     * @return the string typed.
+     */
+    private String getString(String prompt) {
     	String res;
     	do {
 			System.out.print(prompt);
@@ -79,11 +97,11 @@ public class LocalMode extends Thread {
     	String[] args = new String[2]; 
     	String human = readChoice("> Do you want to play against an AI or against another human player? (ai/human)?", "ai", "human");
     	if (human.equals("human")) {
-    		args[0] = getName("> Player 1, what is your name?");
-    		args[1] = getName("> Player 2, what is your name?");
+    		args[0] = getString("> Player 1, what is your name?");
+    		args[1] = getString("> Player 2, what is your name?");
     	}
     	else {
-    		args[0] = getName("> What is your name?");
+    		args[0] = getString("> What is your name?");
     		args[1] = "-N";
     	}
     	return args;
@@ -118,6 +136,12 @@ public class LocalMode extends Thread {
     		}
     		LocalClient game = new LocalClient(p1, p2);
     		game.start();
+    		try {
+    			game.join();
+    		} catch (InterruptedException e) {
+    			System.out.println(e.getMessage());
+    			e.printStackTrace();
+    		}
     	}
     }
 }
