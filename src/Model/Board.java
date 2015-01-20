@@ -202,6 +202,22 @@ public class Board {
     }
 
     /*@
+	   requires this.isField(i);
+	   ensures \result == (this.getField(i) == Mark.XXX);
+	 */
+	/**
+	 * Returns true if the field <code>i</code> is empty.
+	 * 
+	 * @param i
+	 * the index of the field (see NUMBERING)
+	 *            
+	 * @return true if the field is empty
+	 */
+	public boolean isEmptyField(int i) {
+	    return getField(i) == Mark.XXX;
+	}
+
+	/*@
        requires this.isField(row,col);
        ensures \result == (this.getField(row,col) == Mark.XXX);
 
