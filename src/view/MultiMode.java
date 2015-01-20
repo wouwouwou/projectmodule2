@@ -21,6 +21,9 @@ public class MultiMode extends Thread {
     		System.out.println(socket.getInetAddress());
     		System.out.println(socket.getLocalPort());
     		System.out.println(socket.isConnected());
+    		while (true) {
+    			
+    		}
     	} catch (Exception e) {
     		System.out.println(e.getMessage());
     		e.printStackTrace();

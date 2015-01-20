@@ -3,7 +3,7 @@ package controller;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.List;
+import java.util.*;
 
 /**
  * Server for the ConnectFour game
@@ -15,8 +15,7 @@ import java.util.List;
 
 public class Server extends Thread {
 	
-	private ServerSocket serversock;
-	private List<ClientHandler> clients;
+	private List<ClientHandler> clients = new ArrayList<ClientHandler>();
 	
 	private void addClient(ClientHandler client) {
 		clients.add(client);
@@ -24,7 +23,7 @@ public class Server extends Thread {
 	
 	public void run() {
 		try {
-			serversock = new ServerSocket(4321);
+			ServerSocket serversock = new ServerSocket(4321);
 			System.out.println("Server is active on port " + serversock.getLocalPort() + ". \n");
 			System.out.println("Server hostname: " + serversock.getInetAddress().getHostName() + " | Server IP : " + serversock.getInetAddress().getHostAddress());
 			while(true) {
