@@ -1,5 +1,7 @@
 package view;
 
+import controller.ServerController;
+
 /**
  * Main application for ConnectFour.
  * 
@@ -37,8 +39,10 @@ public class ConnectFour {
 	public static void main(String[] args) {
 		String start = StandardInput.readChoice("\n> Do you want to start a server, or do you want to play? (server/play)? \n", "server", "play");
 		if (start.equals("server")) {
-			Thread server = new ServerView();
-			server.start();
+			Thread serverview = new ServerView();
+			Thread serverController = new ServerController();
+			serverview.start();
+			serverController.start();
 		}
 		else {
 			playGame();
