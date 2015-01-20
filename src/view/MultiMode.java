@@ -16,12 +16,7 @@ public class MultiMode extends Thread {
 	
     public void run() {
     	try {
-    		byte[] ip = new byte[4];
-    		String[] stringip = StandardInput.getString("\n> Insert the ip-address.\n").split(".");
-    		for (String ippart : stringip) {
-    			
-    		}
-    		socket = new Socket(InetAddress.getByAddress(ip), 4321);
+    		socket = new Socket(InetAddress.getByName(StandardInput.getString("\n> Insert the ip-address \n")), 4321);
     		System.out.println(socket.getPort());
     		System.out.println(socket.getInetAddress());
     		System.out.println(socket.getLocalPort());
