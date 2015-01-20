@@ -20,8 +20,10 @@ public class Server extends Thread {
 		try {
 			serversock = new ServerSocket(4321);
 			System.out.println("Server is active on port " + serversock.getLocalPort() + ". \n");
-			
-			Socket sock = serversock.accept();
+			System.out.println("Server hostname: " + serversock.getInetAddress().getHostName() + " | Server IP : " + serversock.getInetAddress().getHostAddress());
+			while(true) {
+				Socket sock = serversock.accept();
+			}
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
