@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
@@ -24,8 +25,7 @@ public class Server extends Thread {
 	public void run() {
 		try {
 			ServerSocket serversock = new ServerSocket(4321);
-			System.out.println("Server is active on port " + serversock.getLocalPort() + ". \n");
-			System.out.println("Server hostname: " + serversock.getInetAddress().getHostName() + " | Server IP : " + serversock.getInetAddress().getHostAddress());
+			System.out.println("Server is active on " + InetAddress.getLocalHost().getHostAddress() + ":" + serversock.getLocalPort() + ". \n");
 			while(true) {
 				Socket sock = serversock.accept();
 				ClientHandler handler = new ClientHandler(this, sock);
