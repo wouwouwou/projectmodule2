@@ -13,7 +13,7 @@ import view.LocalMode;
  * @version v1.0
  */
 
-public class LocalClient extends Thread {
+public class LocalGame extends Thread {
 
     // -- Instance variables -----------------------------------------
 
@@ -58,7 +58,7 @@ public class LocalClient extends Thread {
      * @param p1
      *            the second player
      */
-    public LocalClient(Player p0, Player p1) {
+    public LocalGame(Player p0, Player p1) {
         board = new Board();
         players = new Player[NUMBER_PLAYERS];
         players[0] = p0;

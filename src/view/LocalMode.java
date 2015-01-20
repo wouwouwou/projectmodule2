@@ -2,7 +2,7 @@ package view;
 
 import java.util.Scanner;
 
-import controller.LocalClient;
+import controller.LocalGame;
 import model.ComputerPlayer;
 import model.HumanPlayer;
 import model.Mark;
@@ -134,7 +134,7 @@ public class LocalMode extends Thread {
     		if (p2 == null) {
     			p2 = new HumanPlayer(args[1], Mark.BLU);
     		}
-    		LocalClient game = new LocalClient(p1, p2);
+    		LocalGame game = new LocalGame(p1, p2);
     		game.start();
     		try {
     			game.join();
