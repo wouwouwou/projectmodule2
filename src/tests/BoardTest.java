@@ -116,24 +116,74 @@ public class BoardTest {
 	
 	@Test
 	public void testGetField2(){
-		board.setField(0, 1, Mark.BLU);
-		board.setField(0, 2, Mark.RED);
-		assertEquals(board.getField(0, 0), Mark.XXX);
-		assertEquals(board.getField(0, 1), Mark.BLU);
-		assertEquals(board.getField(0, 2), Mark.RED);
+		board.setField(5, 1, Mark.BLU);
+		board.setField(5, 2, Mark.RED);
+		assertEquals(board.getField(5, 0), Mark.XXX);
+		assertEquals(board.getField(5, 1), Mark.BLU);
+		assertEquals(board.getField(5, 2), Mark.RED);
 	}
 	
 	@Test
 	public void testIsEmptyField1(){
 		board.setField(1, Mark.BLU);
 		board.setField(2, Mark.RED);
+		assertTrue(board.isEmptyField(0));
 		assertFalse(board.isEmptyField(1));
 		assertFalse(board.isEmptyField(2));
-		assertTrue(board.isEmptyField(3));
 	}
 	
 	@Test
 	public void testIsEmptyField2(){
-		
+		board.setField(5, 1, Mark.BLU);
+		board.setField(5, 2, Mark.RED);
+		assertTrue(board.isEmptyField(5, 0));
+		assertFalse(board.isEmptyField(5, 1));
+		assertFalse(board.isEmptyField(5, 2));
+	}
+	
+	@Test
+	public void testIsColumn(){
+		for(int i = 0; i < Board.WIDTH; i++){
+			assertTrue(board.isColumn(i));
+		}
+		for(int i = Board.WIDTH; i < 100; i++){
+			assertFalse(board.isColumn(i));
+		}
+		for(int i = -20; i < 0; i++){
+			assertFalse(board.isColumn(i));
+		}
+	}
+	
+	@Test
+	public void testContainsEmptyColumn(){
+		board.setField(5, 1, Mark.BLU);
+		board.setField(4, 1, Mark.RED);
+		board.setField(3, 1, Mark.BLU);
+		board.setField(2, 1, Mark.RED);
+		board.setField(1, 1, Mark.BLU);
+		board.setField(0, 1, Mark.RED);
+		board.setField(5, 2, Mark.BLU);
+		board.setField(4, 2, Mark.RED);
+		board.setField(3, 2, Mark.BLU);
+		board.setField(2, 2, Mark.RED);
+		board.setField(1, 2, Mark.BLU);
+		board.setField(0, 2, Mark.RED);
+		assertTrue(board.containsEmptyColumn(0));
+		assertFalse(board.containsEmptyColumn(1));
+		assertFalse(board.containsEmptyColumn(2));
+	}
+	
+	//1 branch missed.
+	@Test
+	public void testDetermineField() {
+		board.setField(5, 1, Mark.BLU);
+		board.setField(5, 2, Mark.BLU);
+		board.setField(4, 2, Mark.BLU);
+		board.setField(3, 2, Mark.RED);
+		board.setField(2, 2, Mark.BLU);
+		board.setField(1, 2, Mark.RED);
+		assertEquals(board.determineField(0), board.index(5, 0));
+		assertEquals(board.determineField(1), board.index(4, 1));
+		assertEquals(board.determineField(2), board.index(0, 2));
 	}
 }
