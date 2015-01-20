@@ -16,7 +16,7 @@ public class MultiMode extends Thread {
 	
     public void run() {
     	try {
-    		socket = new Socket(InetAddress.getLocalHost(), 4321);
+    		socket = new Socket(InetAddress.getByName(getName()), 4321);
     		System.out.println(socket.getPort());
     		System.out.println(socket.getInetAddress());
     		System.out.println(socket.getLocalPort());
