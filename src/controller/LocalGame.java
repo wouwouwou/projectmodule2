@@ -1,10 +1,7 @@
 package controller;
 
-import java.util.Scanner;
-
 import model.Board;
 import model.Player;
-import view.LocalMode;
 import view.StandardInput;
 
 /**

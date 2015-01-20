@@ -1,13 +1,11 @@
 package view;
 
-import java.util.Scanner;
 import controller.LocalGame;
 import model.ComputerPlayer;
 import model.HumanPlayer;
 import model.Mark;
 import model.Player;
 import model.SmartStrategy;
-import java.util.Observer;
 
 /**
  * View for playing the game in Local mode.
@@ -16,7 +14,7 @@ import java.util.Observer;
  * @version v1.0
  */
 
-public class LocalMode extends Thread implements Observer {
+public class LocalMode extends Thread {
     
     private String[] getPlayers() {
     	String[] args = new String[2]; 

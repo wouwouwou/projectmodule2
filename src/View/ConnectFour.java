@@ -1,6 +1,6 @@
 package view;
 
-import controller.ServerController;
+import controller.Server;
 
 /**
  * Main application for ConnectFour.
@@ -39,10 +39,18 @@ public class ConnectFour {
 	public static void main(String[] args) {
 		String start = StandardInput.readChoice("\n> Do you want to start a server, or do you want to play? (server/play)? \n", "server", "play");
 		if (start.equals("server")) {
+			Thread server = new Server();
 			Thread serverview = new ServerView();
-			Thread serverController = new ServerController();
+			server.start();
 			serverview.start();
-			serverController.start();
+			try {
+				serverview.join();
+			} catch (InterruptedException e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+			}
+			System.out.println("\nServer disconnected.");
+			System.exit(0);
 		}
 		else {
 			playGame();

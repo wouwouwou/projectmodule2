@@ -77,13 +77,33 @@ public class StandardInput {
      * 
      * @return the string typed.
      */
+    public static boolean readServerShutdown() {
+    	String res;
+    	do {
+			System.out.print("Type EXIT to shut the server down");
+			Scanner in = new Scanner(System.in);
+    		res = in.hasNextLine() ? in.nextLine() : null;
+		} while (!res.equals("EXIT"));
+    	return true;
+    }
+    
+    /**
+     * Prints a question which can be answered with a String.
+     * After prompting the question on standard out, this method reads a String
+     * from standard in and gives it back to the caller.
+     * 
+     * @param prompt
+     * the question to print.
+     * 
+     * @return the string typed.
+     */
     public static String getString(String prompt) {
     	String res;
     	do {
 			System.out.print(prompt);
 			Scanner in = new Scanner(System.in);
     		res = in.hasNextLine() ? in.nextLine() : null;
-		} while (res == null);
+		} while (!res.equals(""));
     	return res;
     }
 	

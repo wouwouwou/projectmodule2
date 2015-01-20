@@ -1,8 +1,5 @@
 package view;
 
-import java.util.Scanner;
-
-
 /**
  * View for playing the game in Multiplayer mode.
  * 
