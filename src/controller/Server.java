@@ -7,6 +7,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
+import view.ServerView;
+
 /**
  * Server for the ConnectFour game
  * 
@@ -18,15 +20,24 @@ import java.util.*;
 public class Server extends Thread {
 	
 	private List<ClientHandler> clients = new ArrayList<ClientHandler>();
+	private List<String> features = new ArrayList<String>();
 	
 	private void addClient(ClientHandler client) {
 		clients.add(client);
 	}
 	
+	List<String> getFeatures() {
+		return features;
+	}
+	
+	List<ClientHandler> getClients() {
+		return clients;
+	}
+	
 	public void run() {
 		try {
 			ServerSocket serversock = new ServerSocket(4321);
-			System.out.println("Server is active on " + InetAddress.getLocalHost().getHostAddress() + ":" + serversock.getLocalPort() + ". \n");
+			ServerView.isActive(InetAddress.getLocalHost().getHostAddress(), serversock.getLocalPort());
 			while(true) {
 				Socket sock = serversock.accept();
 				ClientHandler handler = new ClientHandler(this, sock);

@@ -1,9 +1,6 @@
 package view;
 
-import java.net.Socket;
-import java.net.InetAddress;
-import java.io.*;
-import java.net.UnknownHostException;
+import java.util.Scanner;
 
 /**
  * View for playing the game in Multiplayer mode.
@@ -14,35 +11,27 @@ import java.net.UnknownHostException;
 
 public class ClientView extends Thread {
 	
-	private Socket sock;
-	private String name;
-	private PrintStream out;
-	private BufferedReader in;
+	public static String getClientName() {
+		return StandardInput.getString("\n> What's your name? \n");
+	}
 	
-    public void run() {
-    	try {
-    		sock = new Socket(InetAddress.getByName(StandardInput.getString("\n> Insert the ip-address. \n")), 4321);
-    		System.out.println(sock.getLocalPort());
-    		System.out.println(sock.getPort());
-    		try {
-    			in = new BufferedReader(new InputStreamReader((sock.getInputStream())));
-    			out = new PrintStream(sock.getOutputStream());
-    			String bericht = StandardInput.getString("\nWhat's the message?\n");
-    			out.println(bericht);
-    		} catch (IOException e){
-    			System.out.println(e.getMessage());
-    			e.printStackTrace();
-    		}
-    		while (true) {
-    			
-    		}
-    	} catch (UnknownHostException e) {
-    		System.out.println(e.getMessage());
-    		e.printStackTrace();
-    	} catch (IOException e) {
-    		System.out.println(e.getMessage());
-    		e.printStackTrace();
-    	}
-    	
-    }
+	public static String getIP() {
+		return StandardInput.getString("\n> Insert the ip-address. \n");
+	}
+	
+	public static void printLobby(String lobby) {
+		System.out.println("Current lobby:");
+		System.out.println("____________________________________\n");
+		Scanner scan = new Scanner(lobby);
+		scan.skip("LOBBY");
+		while (scan.hasNext()) {
+			System.out.println(scan.next());
+		}
+		System.out.println("____________________________________\n");
+	}
+	
+	public static void connected() {
+		System.out.println("\nYou succesfully made a connection with the server!\n");
+	}
+	
 }

@@ -1,6 +1,7 @@
 package view;
 
 import controller.Server;
+import controller.Client;
 
 /**
  * Main application for ConnectFour.
@@ -18,10 +19,12 @@ public class ConnectFour {
 	}
 	
 	private static void playMulti() {
-		Thread play = new ClientView();
-		play.start();
+		Thread client = new Client();
+		Thread clientview = new ClientView();
+		client.start();
+		clientview.start();
 		try {
-			play.join();
+			clientview.join();
 		} catch (InterruptedException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
