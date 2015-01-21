@@ -1,8 +1,12 @@
 package controller;
 
 import model.Board;
+import model.ComputerPlayer;
+import model.HumanPlayer;
+import model.Mark;
 import model.Player;
 import view.StandardInput;
+import view.LocalMode;
 
 /**
  * Local controller class for the Connect Four game. 
@@ -11,7 +15,7 @@ import view.StandardInput;
  * @version v1.0
  */
 
-public class LocalGame {
+public class LocalGame implements Runnable{
 
     // -- Instance variables -----------------------------------------
 
@@ -44,34 +48,53 @@ public class LocalGame {
 
     // -- Constructors -----------------------------------------------
 
-    /*@
-      requires p0 != null;
-      requires p1 != null;
-     */
     /**
-     * Creates a new Game object.
-     * 
-     * @param p0
-     *            the first player
-     * @param p1
-     *            the second player
+     * Creates a new LocalGame object.
      */
-    public LocalGame(Player p0, Player p1) {
+    public LocalGame() {
         board = new Board();
         players = new Player[NUMBER_PLAYERS];
-        players[0] = p0;
-        players[1] = p1;
         current = 0;
     }
 
     // -- Commands ---------------------------------------------------
-
+    
+    /**
+     * Gets the players and starts a game.
+     */
+    public void run() {
+    	getPlayers();
+    	startGame();
+    }
+    
+    //TODO JML
+    /**
+     * Gets the players.
+     */
+    private void getPlayers() {
+    	String[] args = LocalMode.getPlayers();
+    	
+    	switch (args[0]) {
+    	case "-N": 	players[0] = new ComputerPlayer(Mark.RED);
+    //	case "-S": 	players[0] = new ComputerPlayer(Mark.RED);
+    				break;		
+    	default: 	players[0] = new HumanPlayer(args[0], Mark.RED);
+    		
+    	}
+    	switch (args[1]) {
+    	case "-N": 	players[1] = new ComputerPlayer(Mark.BLU);
+    //	case "-S": 	players[1] = new ComputerPlayer(Mark.BLU);
+    				break;
+    	default: 	players[1] = new HumanPlayer(args[1], Mark.BLU);
+    	}
+    }
+    
     /**
      * Starts the Connect Four game. <br>
      * Asks after each ended game if the user wants to continue.
      * Continues until the user doesn't want to play anymore.
      */
-    public void start() {
+    public void startGame() {
         boolean doorgaan = true;
         while (doorgaan) {
             reset();
