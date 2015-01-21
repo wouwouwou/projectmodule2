@@ -7,12 +7,17 @@ import model.*;
 public class BoardTest {
     private Board board;
     
-    // Sets the board to an empty board.
+    /*
+     *  Sets the board to an empty board.
+     */
 	@Before
 	public void setUp() throws Exception {
 		board = new Board();
 	}
-	// Tests whether the board is really empty.
+	
+	/*
+	 *  Tests whether the board is really empty.
+	 */
 	@Test
 	public void testInitialState() {
 		for(int i = 0; i < Board.WIDTH * Board.HEIGHT; i++){
@@ -20,7 +25,9 @@ public class BoardTest {
 		}
 	}
 	
-	// Tests whether the deepcopy really gives a copy of the board as it is at that time.
+	/*
+	 *  Tests whether the deepcopy really gives a copy of the board as it is at that time.
+	 */
 	@Test
 	public void testDeepcopy(){
 		Board board1 = board.deepCopy();
@@ -29,7 +36,9 @@ public class BoardTest {
 		}
 	}
 	
-	//Tests whether the index gives the right index when the row and column are given.
+	/*
+	 * Tests whether the index gives the right index when the row and column are given.
+	 */
 	@Test
 	public void testIndex(){
 		int a = 1;
@@ -43,7 +52,10 @@ public class BoardTest {
 		assertEquals(board.index(a,b), 800);
 	}
 	
-	// Tests whether really only the fields that are meant to be checked are selected. 
+	/*
+	 *  Tests whether really only the fields that are meant to be checked are selected. 
+	 *  tested what would happen if a value was given that was right, was too high or was too high.
+	 */
 	@Test
 	public void testIsField1(){
 		for(int i = 0; i < Board.WIDTH * Board.HEIGHT; i++){
@@ -57,7 +69,11 @@ public class BoardTest {
 		}
 	}
 	
-	//Tests whether only the columns and rows which are meant to be in the board are allowed.
+	/*
+	 * Tests whether only the columns and rows which are meant to be in the board are allowed.
+	 * Tested what would happen with all kind of values for the column and for the row. The values given are between -20 and 100. Only the values 0 - 5 
+	 * should be correct for rows and the values 0 - 6 should be correct for colums.
+	 */
 	@Test
 	public void testIsField2(){
 		for(int i = 0; i < Board.WIDTH; i++){
@@ -106,7 +122,9 @@ public class BoardTest {
 		}
 	}
 	
-	// Tests whether the right thing in the right field is given.
+	/*
+	 *  Tests whether the right thing in the right field is given.
+	 */
 	@Test
 	public void testGetField1(){
 		board.setField(1, Mark.BLU);
@@ -117,7 +135,9 @@ public class BoardTest {
 		
 	}
 	
-	// Tests whether the right thing in the right field is given.
+	/*
+	 *  Tests whether the right thing in the right field is given.
+	 */
 	@Test
 	public void testGetField2(){
 		board.setField(5, 1, Mark.BLU);
@@ -127,7 +147,9 @@ public class BoardTest {
 		assertEquals(board.getField(5, 2), Mark.RED);
 	}
 	
-	// Tests whether the querry gives the right boolean when a field is selected.
+	/*
+	 *  Tests whether the quarry gives the right boolean when a field is selected.
+	 */
 	@Test
 	public void testIsEmptyField1(){
 		board.setField(1, Mark.BLU);
@@ -137,7 +159,9 @@ public class BoardTest {
 		assertFalse(board.isEmptyField(2));
 	}
 	
-	// Tests whether the querry gives the right boolean when a field is selected.
+	/*
+	 *  Tests whether the quarry gives the right boolean when a field is selected.
+	 */
 	@Test
 	public void testIsEmptyField2(){
 		board.setField(5, 1, Mark.BLU);
@@ -147,7 +171,9 @@ public class BoardTest {
 		assertFalse(board.isEmptyField(5, 2));
 	}
 	
-	// Tests whether it allows the right colums.
+	/*
+	 *  Tests whether it allows the right columns.
+	 */
 	@Test
 	public void testIsColumn(){
 		for(int i = 0; i < Board.WIDTH; i++){
@@ -161,7 +187,10 @@ public class BoardTest {
 		}
 	}
 	
-	// Tests whether a column still has an empty field.
+	/*
+	 *  Tests whether a column still has an empty field.
+	 *  Added fields to the board in such a way that we could test for certain situations.
+	 */
 	@Test
 	public void testContainsEmptyColumn(){
 		board.setField(5, 1, Mark.BLU);
@@ -181,7 +210,9 @@ public class BoardTest {
 		assertFalse(board.containsEmptyColumn(2));
 	}
 	
-	// Tests whether the right field is selected by the querry.
+	/*
+	 *  Tests whether the right field is selected by the querry.
+	 */
 	@Test
 	public void testDetermineField() {
 		board.setField(5, 1, Mark.BLU);
@@ -195,7 +226,10 @@ public class BoardTest {
 		assertEquals(board.determineField(2), board.index(0, 2));
 	}
 	
-	// Tests whether the querry gives the correct boolean when the board is full and when the board is not full.
+	/*
+	 *  Tests whether the quarry gives the correct boolean when the board is full and when the board is not full.
+	 *  To test if the board was full we first tested an empty board and the an full board. 
+	 */
 	@Test
 	public void testIsFull() {
 		assertFalse(board.isFull());
@@ -222,7 +256,11 @@ public class BoardTest {
 		assertTrue(board.isFull());
 	}
 	
-	// Tests whether 
+	/*
+	 *  Tests whether the quarry tests if there is a player who has a win condition and whether the right player is selected.
+	 *  To test if this worked in the right way we first tested when a board was empty and then added a couple of fields which would 
+	 *  make four in a row horizontally for both player blue and player red.
+	 */
 	@Test
 	public void testHasRow() {
 		assertFalse(board.hasRow(Mark.RED));
@@ -239,6 +277,11 @@ public class BoardTest {
 		assertTrue(board.hasRow(Mark.BLU));
 	}
 	
+	/*
+	 *  Tests whether the quarry tests if there is a player who has a win condition and whether the right player is selected.
+	 *  To test if this worked in the right way we first tested when a board was empty and then added a couple of fields which would 
+	 *  make four in a row vertically for both player blue and player red.
+	 */
 	@Test
 	public void testHasColumn() {
 		assertFalse(board.hasColumn(Mark.BLU));
@@ -254,7 +297,11 @@ public class BoardTest {
 		assertTrue(board.hasColumn(Mark.BLU));
 		assertTrue(board.hasColumn(Mark.RED));
 	}
-
+	
+	/*
+	 *  Tests whether the quarry tests if there is a player who has a win condition and whether the right player is selected.
+	 *  FIlled fields in so we had a diagonal in two directions and then tested them.
+	 */
 	@Test
 	public void testHasDiagonal() {
 		assertFalse(board.hasDiagonal(Mark.BLU));
@@ -281,6 +328,10 @@ public class BoardTest {
 		assertTrue(board.hasDiagonal(Mark.RED));
 	}
 	
+	/*
+	 * Tests whether the quarry gives the right boolean when the game is over and when the game is not over.
+	 * Had to implement all situations you can have where the game ends(a player wins or the board is full).
+	 */
 	@Test
 	public void testGameOver() {
 		assertFalse(board.gameOver());
@@ -352,6 +403,10 @@ public class BoardTest {
 		assertTrue(board.gameOver());
 	}
 	
+	/*
+	 * tests whether the quarry sees it when a player has won and if it selects the right player.
+	 * Added fields which would make a player win with a horizontal, vertical and diagonal four in a row. We did this for both players.
+	 */
 	@Test
 	public void testIsWinner() {
 		assertFalse(board.isWinner(Mark.BLU));
@@ -397,7 +452,12 @@ public class BoardTest {
 		assertTrue(board.isWinner(Mark.RED));
 	}
 	
-	// nog 1 branch gemist. Dit is waarschijnlijk de branch die true geeft wanneer ze beide waar zijn maar daar hoeft niet op getest te worden.
+	/*
+	 *  Tests if the quarry sees if there is a winner in the game.
+	 *  1 branch is not tested. We don't think it is necessary to test this branch because this branch is when both players have won which will
+	 *  not be able to happen since the winner is determined after each turn and only one player is tested.
+	 *  Tested if one player has won with a vertival, horizontal or diagonal four in a row.
+	 */
 	@Test
 	public void testHasWinner() {
 		assertFalse(board.hasWinner());
@@ -439,6 +499,10 @@ public class BoardTest {
 		assertTrue(board.hasWinner());
 	}
 	
+	
+	/*
+	 * tests if the board is printed correctly.
+	 */
 	@Test
 	public void testToString() {
 		String method = board.toString();
@@ -463,6 +527,10 @@ public class BoardTest {
         assertEquals(method, s);
 	}
 	
+	/*
+	 * Tests if the board is empty after it has been reset.
+	 * We first added some fields to the board and then reset it which gave an empty board back.
+	 */
 	@Test
 	public void testReset() {
 		board.setField(8, Mark.RED);
@@ -476,12 +544,19 @@ public class BoardTest {
 		}
 	}
 	
+	/*
+	 * Tests whether the right field is changed and the field is changed to the right mark.
+	 */
 	@Test
 	public void testSetField1(){
 		board.setField(1, Mark.BLU);
 		assertEquals(board.getField(1), Mark.BLU);
 	}
 	
+	
+	/*
+	 * Tests whether the right field is changed and the field is changed to the right mark.
+	 */
 	@Test
 	public void testSetField2() {
 		board.setField(1, 2, Mark.BLU);
