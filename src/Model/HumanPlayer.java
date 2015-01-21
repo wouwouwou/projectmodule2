@@ -45,6 +45,7 @@ public class HumanPlayer extends Player {
      *            the game board
      * @return the player's chosen field
      */
+    /*@pure*/
     public int determineMove(Board board) {
         String prompt = "> " + getName() + " (" + getMark().toString() + ")"
                 + ", what is your choice? ";

@@ -44,6 +44,7 @@ public abstract class Player {
      * 
      * @return Player name
      */
+    /*@pure*/
     public String getName() {
         return name;
     }
@@ -53,6 +54,7 @@ public abstract class Player {
      * 
      * @return Player mark
      */
+    /*@pure*/
     public Mark getMark() {
         return mark;
     }

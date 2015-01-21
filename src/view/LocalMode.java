@@ -5,7 +5,6 @@ import model.ComputerPlayer;
 import model.HumanPlayer;
 import model.Mark;
 import model.Player;
-import model.SmartStrategy;
 
 /**
  * View for playing the game in Local mode.

@@ -162,6 +162,7 @@ public class Board {
      *            
      * @return the mark on the field
      */
+    /*@pure*/
     public Mark getField(int i) {
     	return fields[i]; 
     }
@@ -181,6 +182,7 @@ public class Board {
      *            
      * @return the mark on the field
      */
+    /*@pure*/
     public Mark getField(int row, int col) {
     	return fields[index(row, col)];
     }
@@ -197,6 +199,7 @@ public class Board {
 	 *            
 	 * @return true if the field is empty
 	 */
+    /*@pure*/
 	public boolean isEmptyField(int i) {
 	    return getField(i) == Mark.XXX;
 	}
@@ -271,6 +274,7 @@ public class Board {
      * 
      * @return lowest field on the board. (highest index, highest row)
      */
+    /*@pure*/
     public int determineField(int col) {
     	int row = HEIGHT - 1;
     	while (row >= 0) {
@@ -325,6 +329,7 @@ public class Board {
      *
      * @return true if there is a row which connects four marks <code>m</code>
      */
+    /*@pure*/
     public boolean hasRow(Mark m) {
     	int row = 0;
     	while(row < HEIGHT){
@@ -358,6 +363,7 @@ public class Board {
      *            
      * @return true if there is a column which connects four marks <code>m</code>
      */
+    /*@pure*/
     public boolean hasColumn(Mark m) {
     	int col = 0;
     	while (col < WIDTH) {
@@ -391,6 +397,7 @@ public class Board {
      *            
      * @return true if there is a diagonal which connects four marks <code>m</code>
      */
+    /*@pure*/
     public boolean hasDiagonal(Mark m) {
     	int count = 0;
     	for(int i = 0; i < WIDTH * HEIGHT; i++){
