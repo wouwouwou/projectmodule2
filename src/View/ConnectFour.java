@@ -18,7 +18,7 @@ public class ConnectFour {
 	}
 	
 	private static void playMulti() {
-		Thread play = new MultiMode();
+		Thread play = new ClientView();
 		play.start();
 		try {
 			play.join();

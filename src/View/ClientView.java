@@ -12,7 +12,7 @@ import java.net.UnknownHostException;
  * @version v1.0
  */
 
-public class MultiMode extends Thread {
+public class ClientView extends Thread {
 	
 	private Socket sock;
 	private String name;
