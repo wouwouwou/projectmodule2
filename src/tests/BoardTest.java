@@ -186,4 +186,161 @@ public class BoardTest {
 		assertEquals(board.determineField(1), board.index(4, 1));
 		assertEquals(board.determineField(2), board.index(0, 2));
 	}
+	
+	@Test
+	public void testIsFull() {
+		assertFalse(board.isFull());
+		for(int i = 0; i < Board.WIDTH; i++){
+			for(int j = 0; j < Board.HEIGHT; j++){
+				if(i % 2 == 0){
+					if(j % 2 == 0){
+						board.setField(j, i, Mark.RED);
+					}
+					else{
+						board.setField(j, i, Mark.BLU);
+					}
+				}
+				else{
+					if(j % 2 == 1){
+						board.setField(j, i, Mark.BLU);
+					}
+					else{
+						board.setField(j, i, Mark.RED);
+					}
+				}
+			}
+		}
+		assertTrue(board.isFull());
+	}
+	
+	//nog 1 branch gemist.
+	@Test
+	public void testHasRow() {
+		assertFalse(board.hasRow(Mark.RED));
+		assertFalse(board.hasRow(Mark.BLU));
+		for(int i = 0; i < Board.WIDTH * Board.HEIGHT; i++){
+			if(i == 0 || i == 1 || i == 2 || i == 3){
+				board.setField(i, Mark.BLU);
+			}
+			else if(i == 7 || i == 8 || i == 9 || i == 10){
+				board.setField(i, Mark.RED);
+			}
+		}
+		assertTrue(board.hasRow(Mark.RED));
+		assertTrue(board.hasRow(Mark.BLU));
+	}
+	
+	@Test
+	public void testHasColumn() {
+		assertFalse(board.hasColumn(Mark.BLU));
+		assertFalse(board.hasColumn(Mark.RED));
+		for(int i = 0; i < Board.WIDTH * Board.HEIGHT; i++){
+			if(i == 0 || i == 7 || i == 14 || i == 21){
+				board.setField(i, Mark.BLU);
+			}
+			else if(i == 1 || i == 8 || i == 15 || i == 22){
+				board.setField(i, Mark.RED);
+			}
+		}
+		assertTrue(board.hasColumn(Mark.BLU));
+		assertTrue(board.hasColumn(Mark.RED));
+	}
+
+	@Test
+	public void testHasDiagonal() {
+		assertFalse(board.hasDiagonal(Mark.BLU));
+		assertFalse(board.hasDiagonal(Mark.RED));
+		for(int i = 0; i < Board.WIDTH * Board.HEIGHT; i++){
+			if(i == 0 || i == 8 || i == 16 || i == 24){
+				board.setField(i, Mark.BLU);
+			}
+			else if(i == 13 || i == 19 || i == 25 || i == 31){
+				board.setField(i, Mark.RED);
+			}
+		}
+		assertTrue(board.hasDiagonal(Mark.RED));
+		assertTrue(board.hasDiagonal(Mark.BLU));
+		for(int i = 0; i < Board.WIDTH * Board.HEIGHT; i++){
+			if(i == 3 || i == 9 || i == 15 || i == 21){
+				board.setField(i, Mark.BLU);
+			}
+			else if(i == 10 || i == 18 || i == 26 || i == 34){
+				board.setField(i, Mark.RED);
+			}
+		}
+		assertTrue(board.hasDiagonal(Mark.BLU));
+		assertTrue(board.hasDiagonal(Mark.RED));
+	}
+	
+	@Test
+	public void testGameOver() {
+		assertFalse(board.gameOver());
+		for(int i = 0; i < Board.WIDTH * Board.HEIGHT; i++){
+			if(i == 0 || i == 1 || i == 2 || i ==3){
+				board.setField(i, Mark.RED);
+			}
+			else{
+				board.setField(i, Mark.XXX);
+			}
+		}
+		assertTrue(board.gameOver());
+		for(int i = 0; i < Board.WIDTH * Board.HEIGHT; i++){
+			if(i == 0 || i == 7 || i == 14 || i == 21){
+				board.setField(i, Mark.RED);
+			}
+			else{
+				board.setField(i, Mark.XXX);
+			}
+		}
+		assertTrue(board.gameOver());
+		for(int i = 0; i < Board.WIDTH * Board.HEIGHT; i++){
+			if(i == 0 || i == 8 || i == 16 || i == 24){
+				board.setField(i, Mark.RED);
+			}
+			else{
+				board.setField(i, Mark.XXX);
+			}
+		}
+		assertTrue(board.gameOver());
+		for(int i = 0; i < Board.WIDTH * Board.HEIGHT; i++){
+			if(i == 6 || i == 12 || i == 18 || i == 24){
+				board.setField(i, Mark.RED);
+			}
+			else{
+				board.setField(i, Mark.XXX);
+			}
+		}
+		assertTrue(board.gameOver());
+		for(int i = 0; i < Board.WIDTH * Board.HEIGHT; i++){
+			if(i == 0 || i == 7 || i == 14 || i == 21){
+				board.setField(i, Mark.RED);
+			}
+			else{
+				board.setField(i, Mark.XXX);
+			}
+		}
+		for(int i = 0; i < Board.WIDTH; i++){
+			for(int j = 0; j < Board.HEIGHT; j++){
+				if(i % 2 == 0){
+					if(j % 2 == 0){
+						board.setField(j, i, Mark.RED);
+					}
+					else{
+						board.setField(j, i, Mark.BLU);
+					}
+				}
+				else{
+					if(j % 2 == 1){
+						board.setField(j, i, Mark.BLU);
+					}
+					else{
+						board.setField(j, i, Mark.RED);
+					}
+				}
+			}
+		}
+		assertTrue(board.gameOver());
+	}
+	
+	
 }
