@@ -2,6 +2,8 @@ package view;
 
 import java.net.Socket;
 import java.net.InetAddress;
+import java.io.*;
+import java.net.UnknownHostException;
 
 /**
  * View for playing the game in Multiplayer mode.
@@ -12,19 +14,32 @@ import java.net.InetAddress;
 
 public class MultiMode extends Thread {
 	
-	private Socket socket;
+	private Socket sock;
+	private String name;
+	private PrintStream out;
+	private BufferedReader in;
 	
     public void run() {
     	try {
-    		socket = new Socket(InetAddress.getByName(StandardInput.getString("\n> Insert the ip-address \n")), 4321);
-    		System.out.println(socket.getPort());
-    		System.out.println(socket.getInetAddress());
-    		System.out.println(socket.getLocalPort());
-    		System.out.println(socket.isConnected());
+    		sock = new Socket(InetAddress.getByName(StandardInput.getString("\n> Insert the ip-address. \n")), 4321);
+    		System.out.println(sock.getLocalPort());
+    		System.out.println(sock.getPort());
+    		try {
+    			in = new BufferedReader(new InputStreamReader((sock.getInputStream())));
+    			out = new PrintStream(sock.getOutputStream());
+    			String bericht = StandardInput.getString("\nWhat's the message?\n");
+    			out.println(bericht);
+    		} catch (IOException e){
+    			System.out.println(e.getMessage());
+    			e.printStackTrace();
+    		}
     		while (true) {
     			
     		}
-    	} catch (Exception e) {
+    	} catch (UnknownHostException e) {
+    		System.out.println(e.getMessage());
+    		e.printStackTrace();
+    	} catch (IOException e) {
     		System.out.println(e.getMessage());
     		e.printStackTrace();
     	}

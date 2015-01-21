@@ -1,11 +1,14 @@
 package controller;
 
 import java.net.Socket;
+import java.io.*;
 
 public class ClientHandler extends Thread {
 	
 	private Server server;
 	private Socket sock;
+	private BufferedReader in;
+	private PrintStream out;
 	
 	public ClientHandler(Server server, Socket sock) {
 		this.server = server;
@@ -13,11 +16,20 @@ public class ClientHandler extends Thread {
 	}
 	
 	public void run() {
-		System.out.println(sock.getLocalPort() + " connected");
-		System.out.println(sock.getLocalAddress() + " connected");
-		System.out.println(sock.getPort() + " connected");
-		System.out.println(sock.isConnected() + " connected");
-		System.out.println(sock.isBound() + " connected");
+		System.out.println(sock.getLocalPort());
+		System.out.println(sock.getPort());
+		try {
+			in = new BufferedReader(new InputStreamReader((sock.getInputStream())));
+			out = new PrintStream(sock.getOutputStream());
+			System.out.println("\nWaiting for input.\n");
+			System.out.println(in.readLine());
+		} catch (IOException e){
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		while (true) {
+			
+		}
 	}
 	
 }

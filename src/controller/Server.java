@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -32,11 +33,12 @@ public class Server extends Thread {
 				handler.start();
 				addClient(handler);
 			}
+		} catch (UnknownHostException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
-	}
-	
-	
+	}	
 }
