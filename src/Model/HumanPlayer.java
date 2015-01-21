@@ -1,6 +1,6 @@
 package model;
 
-import java.util.Scanner;
+import view.StandardInput;
 
 /**
  * Class for a Human Player in Connect Four.
@@ -48,39 +48,15 @@ public class HumanPlayer extends Player {
     public int determineMove(Board board) {
         String prompt = "> " + getName() + " (" + getMark().toString() + ")"
                 + ", what is your choice? ";
-        int choice = readInt(prompt);
+        int choice = StandardInput.readInt(prompt);
         boolean valid = board.isColumn(choice) && board.containsEmptyColumn(choice);
         while (!valid) {
             System.out.println("ERROR: field " + choice
                     + " is no valid choice.");
-            choice = readInt(prompt);
+            choice = StandardInput.readInt(prompt);
             valid = board.isColumn(choice) && board.containsEmptyColumn(choice);
         }
         return choice;
-    }
-
-    /**
-     * Writes a prompt to standard out and tries to read an int value from
-     * standard in. This is repeated until an int value is entered.
-     * 
-     * @param prompt
-     *            the question to prompt the user
-     * @return the first int value which is entered by the user
-     */
-    private int readInt(String prompt) {
-        int value = 0;
-        boolean intRead = false;
-        do {
-            System.out.print(prompt);
-            Scanner in = new Scanner(System.in);
-            String line = in.nextLine();
-            Scanner scannerLine = new Scanner(line);
-            if (scannerLine.hasNextInt()) {
-                intRead = true;
-                value = scannerLine.nextInt();
-            }
-        } while (!intRead);
-        return value;
     }
 
 }

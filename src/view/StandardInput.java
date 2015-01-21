@@ -88,6 +88,30 @@ public class StandardInput {
     }
     
     /**
+     * Writes a prompt to standard out and tries to read an int value from
+     * standard in. This is repeated until an int value is entered.
+     * 
+     * @param prompt
+     *            the question to prompt the user
+     * @return the first int value which is entered by the user
+     */
+    public static int readInt(String prompt) {
+        int value = 0;
+        boolean intRead = false;
+        do {
+            System.out.print(prompt);
+            Scanner in = new Scanner(System.in);
+            String line = in.nextLine();
+            Scanner scannerLine = new Scanner(line);
+            if (scannerLine.hasNextInt()) {
+                intRead = true;
+                value = scannerLine.nextInt();
+            }
+        } while (!intRead);
+        return value;
+    }
+    
+    /**
      * Prints a question which can be answered with a String.
      * After prompting the question on standard out, this method reads a String
      * from standard in and gives it back to the caller.
