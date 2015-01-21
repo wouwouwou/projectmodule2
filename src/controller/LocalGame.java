@@ -6,7 +6,7 @@ import model.HumanPlayer;
 import model.Mark;
 import model.Player;
 import view.StandardInput;
-import view.LocalMode;
+import view.LocalView;
 
 /**
  * Local controller class for the Connect Four game. 
@@ -72,7 +72,7 @@ public class LocalGame implements Runnable{
      * Gets the players.
      */
     private void getPlayers() {
-    	String[] args = LocalMode.getPlayers();
+    	String[] args = LocalView.getPlayers();
     	
     	switch (args[0]) {
     	case "-N": 	players[0] = new ComputerPlayer(Mark.RED);
@@ -119,10 +119,10 @@ public class LocalGame implements Runnable{
      * the changed game situation is printed.
      */
     private void play() {
-        LocalMode.showBoard(board);
+        LocalView.showBoard(board);
         do {
             players[current].makeMove(board);
-            LocalMode.showBoard(board);
+            LocalView.showBoard(board);
             current = (current+1)%2;
         } while (!board.hasWinner() && !board.isFull());
         this.printResult();

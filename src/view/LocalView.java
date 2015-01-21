@@ -9,7 +9,7 @@ import model.Board;
  * @version v1.0
  */
 
-public class LocalMode{
+public class LocalView{
 	
 	/**
      * Prints the game situation.
