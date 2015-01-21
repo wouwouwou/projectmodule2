@@ -46,6 +46,7 @@ public class ClientHandler extends Thread {
 			scan.close();
 		} catch (IOException e) {
 			out.println("ERROR Failed to connect to server. Reason: " + e.getMessage());
+			out.flush();
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
@@ -57,6 +58,7 @@ public class ClientHandler extends Thread {
 			outpackage = outpackage + feature + " ";
 		}
 		out.println(outpackage);
+		out.flush();
 		ServerView.connected(clientname);
 	}
 	
@@ -71,8 +73,10 @@ public class ClientHandler extends Thread {
 				lobby = lobby + client.getClientName() + " ";
 			}
 			out.println(lobby);
+			out.flush();
 		} catch (IOException e) {
 			out.println("ERROR Failed to send the lobby.");
+			out.flush();
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
