@@ -22,6 +22,10 @@ public class ConnectFour {
 		play.run();
 	}
 	
+	/**
+	 * Starts a Client.
+	 */
+	//TODO ClientView veranderen. Client moet met een peer gaan werken. Tevens shutdown methode aanmaken.
 	private static void playMulti() {
 		Thread client = new Client();
 		Thread clientview = new ClientView();

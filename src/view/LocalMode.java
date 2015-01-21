@@ -1,5 +1,7 @@
 package view;
 
+import model.Board;
+
 /**
  * View for playing the game in Local mode.
  * 
@@ -8,7 +10,21 @@ package view;
  */
 
 public class LocalMode{
+	
+	/**
+     * Prints the game situation.
+     */
+    public static void showBoard(Board board) {
+        System.out.println("\nCurrent game situation: \n\n" + board.toString()
+                + "\n");
+    }
     
+    /**
+     * Asks the player two questions. First question is about playing against an ai or against a human.
+     * Second question is about the names of the players.
+     * 
+     * @return String array with the names of two players. String equals "-N" if a player is an AI.
+     */
     public static String[] getPlayers() {
     	String[] args = new String[2]; 
     	String human = StandardInput.readChoice("\n> Do you want to play against an AI or against another human player? (ai/human)?", "ai", "human");

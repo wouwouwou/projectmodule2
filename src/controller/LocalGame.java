@@ -119,22 +119,13 @@ public class LocalGame implements Runnable{
      * the changed game situation is printed.
      */
     private void play() {
-        this.showBoard();
+        LocalMode.showBoard(board);
         do {
             players[current].makeMove(board);
-            this.showBoard();
+            LocalMode.showBoard(board);
             current = (current+1)%2;
         } while (!board.hasWinner() && !board.isFull());
         this.printResult();
-    }
-
-
-    /**
-     * Prints the game situation.
-     */
-    private void showBoard() {
-        System.out.println("\nCurrent game situation: \n\n" + board.toString()
-                + "\n");
     }
 
     /*@
