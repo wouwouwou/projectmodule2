@@ -13,7 +13,7 @@ import java.util.Scanner;
  * @author  Jan-Jaap van Raffe and Wouter Bos
  * @version v1.0
  */
-public class InvitePeer implements Runnable {
+public class Peer implements Runnable {
 
     protected BufferedReader in;
 
@@ -22,7 +22,7 @@ public class InvitePeer implements Runnable {
      * @param input
      * input from the socket
      */
-    public InvitePeer(Socket sock) throws IOException {
+    public Peer(Socket sock) throws IOException {
     	in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
     }
 
