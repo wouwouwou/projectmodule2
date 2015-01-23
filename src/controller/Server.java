@@ -21,6 +21,7 @@ public class Server extends Thread {
 	
 	private List<ClientHandler> clients = new ArrayList<ClientHandler>();
 	private List<String> features = new ArrayList<String>();
+	private ServerView view = new ServerView(this);
 	
 	private void addClient(ClientHandler client) {
 		clients.add(client);
@@ -34,8 +35,18 @@ public class Server extends Thread {
 		return clients;
 	}
 	
+	public void showLobby() {
+		String lobby = "";
+		for (ClientHandler client : clients) {
+			lobby = lobby + client.getClientName();
+		}
+		ServerView.showClients(lobby);
+	}
+	
 	public void run() {
 		try {
+			Thread serverview = new Thread(view);
+			serverview.start();
 			ServerSocket serversock = new ServerSocket(4321);
 			ServerView.isActive(InetAddress.getLocalHost().getHostAddress(), serversock.getLocalPort());
 			while(true) {

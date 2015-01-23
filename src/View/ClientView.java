@@ -1,6 +1,7 @@
 package view;
 
 import java.util.Scanner;
+import model.*;
 
 /**
  * View for playing the game in Multiplayer mode.
@@ -19,6 +20,17 @@ public class ClientView extends Thread {
 		return StandardInput.getString("\n> Insert the ip-address. \n");
 	}
 	
+	public static void printStartGame(String player, int number) {
+		System.out.println("\nYou started a game with " + player);
+		System.out.println("You are player " + number + "\n"
+				+ "Player 2, please wait for player 1 to make a move! :D \n");
+	}
+	
+	public static void invitesSended() {
+		System.out.println("Invites sended to every member in the lobby.\n"
+				+ "Waiting for a reaction, or an arbitrary but suitable invite.\n");
+	}
+	
 	public static void printLobby(String lobby) {
 		System.out.println("Current lobby:");
 		System.out.println("____________________________________\n");
@@ -28,6 +40,10 @@ public class ClientView extends Thread {
 			System.out.println(scan.next());
 		}
 		System.out.println("____________________________________\n");
+	}
+	
+	public static void printError(String error) {
+		System.out.println(error);
 	}
 	
 	public static void connected() {

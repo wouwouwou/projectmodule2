@@ -1,23 +1,17 @@
 package controller;
 
 import model.Board;
+import model.ClientPlayer;
 import model.ComputerPlayer;
 import model.HumanPlayer;
 import model.Mark;
 import model.Player;
-import view.StandardInput;
 import view.LocalView;
+import view.StandardInput;
 
-/**
- * Local controller class for the Connect Four game. 
- * 
- * @author Jan-Jaap van Raffe and Wouter Bos
- * @version v1.0
- */
-
-public class LocalGame implements Runnable{
-
-    // -- Instance variables -----------------------------------------
+public class GameHandler {
+	
+	// -- Instance variables -----------------------------------------
 
     public static final int NUMBER_PLAYERS = 2;
 
@@ -38,6 +32,11 @@ public class LocalGame implements Runnable{
      */
     private Player[] players;
 
+    /**
+     * The 2 corresponding ClientHandlers.
+     */
+    private ClientHandler[] clients;
+    
     /*@
        private invariant 0 <= current  && current < NUMBER_PLAYERS;
      */
@@ -51,9 +50,12 @@ public class LocalGame implements Runnable{
     /**
      * Creates a new LocalGame object.
      */
-    public LocalGame() {
+    public GameHandler(ClientHandler p1, ClientHandler p2) {
         board = new Board();
-        players = new Player[NUMBER_PLAYERS];
+        players[0] = new ClientPlayer(p1, Mark.RED);
+        players[1] = new ClientPlayer(p2, Mark.BLU);
+        clients[0] = p1;
+        clients[1] = p2;
         current = 0;
     }
 
@@ -63,30 +65,7 @@ public class LocalGame implements Runnable{
      * Gets the players and starts a game.
      */
     public void run() {
-    	getPlayers();
     	startGame();
-    }
-    
-    //TODO JML
-    /**
-     * Gets the players.
-     */
-    private void getPlayers() {
-    	String[] args = LocalView.getPlayers();
-    	
-    	switch (args[0]) {
-    	case "-N": 	players[0] = new ComputerPlayer(Mark.RED);
-    				break;
-    //	case "-S": 	players[0] = new ComputerPlayer(Mark.RED);		
-    	default: 	players[0] = new HumanPlayer(args[0], Mark.RED);
-    		
-    	}
-    	switch (args[1]) {
-    	case "-N": 	players[1] = new ComputerPlayer(Mark.BLU);
-    //	case "-S": 	players[1] = new ComputerPlayer(Mark.BLU);
-    				break;
-    	default: 	players[1] = new HumanPlayer(args[1], Mark.BLU);
-    	}
     }
     
     /**
@@ -95,21 +74,9 @@ public class LocalGame implements Runnable{
      * Continues until the user doesn't want to play anymore.
      */
     public void startGame() {
-        boolean doorgaan = true;
-        while (doorgaan) {
-            reset();
-            play();
-            doorgaan = StandardInput.readBoolean("\n> Play another time? (y/n)?", "y", "n");
-        }
-    }
-
-    /**
-     * Resets the game. <br>
-     * The board is emptied and player[0] becomes the current player.
-     */
-    private void reset() {
-        current = 0;
-        board.reset();
+    	clients[0].sendGameStart(clients[0].getClientName(), clients[1].getClientName());
+    	clients[1].sendGameStart(clients[0].getClientName(), clients[1].getClientName());
+    	play();
     }
 
     /**
@@ -119,11 +86,14 @@ public class LocalGame implements Runnable{
      * the changed game situation is printed.
      */
     private void play() {
-        LocalView.showBoard(board);
         do {
-            players[current].makeMove(board);
-            LocalView.showBoard(board);
-            current = (current+1)%2;
+        	clients[current].requestMove();
+        	try {
+        	this.wait();
+        	} catch (InterruptedException e) {
+        		System.out.println(e.getMessage());
+        		e.printStackTrace();
+        	}
         } while (!board.hasWinner() && !board.isFull());
         this.printResult();
     }
@@ -144,4 +114,5 @@ public class LocalGame implements Runnable{
             System.out.println("Draw. There is no winner!");
         }
     }
+	
 }

@@ -28,15 +28,7 @@ public class ConnectFour {
 	//TODO ClientView veranderen. Client moet met een peer gaan werken. Tevens shutdown methode aanmaken.
 	private static void playMulti() {
 		Thread client = new Client();
-		Thread clientview = new ClientView();
 		client.start();
-		clientview.start();
-		try {
-			clientview.join();
-		} catch (InterruptedException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		}
 	}
 	
 	/**
@@ -59,17 +51,7 @@ public class ConnectFour {
 	//TODO Serverview veranderen. Server moet met een peer gaan werken. Tevens shutdown methode aanmaken.
 	private static void startServer() {
 		Thread server = new Server();
-		Thread serverview = new ServerView();
 		server.start();
-		serverview.start();
-		try {
-			serverview.join();
-		} catch (InterruptedException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		}
-		System.out.println("\nServer disconnected.");
-		System.exit(0);
 	}
 	
 	/**
