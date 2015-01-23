@@ -20,7 +20,7 @@ public class HumanPlayerTest {
 	 * In console, type first a valid move. Then an invalid move, and then the valid move you have typed before.
 	 * Test has to be completed by a person. To test if a field is filled in if the selected column is not full you have to type a valid column twice.
 	 * To test if an invalid column gets an error you will have to first fill in a valid column to be able to complete the test and then an invalid column. This wil give and error.
-	 * We filled a column to make it full. Now you can test what will happen when a column is full. You hav to type the full column twice.
+	 * We filled a column to make it full. Now you can test what will happen when a column is full. You have to type the full column twice.
 	 */
 	@Test
 	public void testDetermineMove() {
