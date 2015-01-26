@@ -1,6 +1,7 @@
 package view;
 
 import java.util.Scanner;
+
 import model.*;
 
 /**
@@ -20,15 +21,38 @@ public class ClientView extends Thread {
 		return StandardInput.getString("\n> Insert the ip-address. \n");
 	}
 	
+	public static int getPort() {
+		return StandardInput.readInt("\n> Insert the port. \n");
+	}
+	
 	public static void printStartGame(String player, int number) {
 		System.out.println("\nYou started a game with " + player);
-		System.out.println("You are player " + number + "\n"
-				+ "Player 2, please wait for player 1 to make a move! :D \n");
+		System.out.println("You are player " + number + "\n");
+	}
+	
+	public static void printGameEnd(String message) {
+		Scanner scan = new Scanner(message);
+		scan.skip("END");
+		String wincondition = scan.next();
+		if (wincondition.equals("WIN")) {
+			System.out.println(scan.next() + " heeft gewonnen!");
+		}
+		else if (wincondition.equals("DRAW")) {
+			System.out.println("Het bord is vol, gelijkspel!");
+		}
+		else {
+			System.out.println("Je tegenstander is weg gegaan. Je hebt gewonnen!");
+		}
+		scan.close();
 	}
 	
 	public static void invitesSended() {
 		System.out.println("Invites sended to every member in the lobby.\n"
 				+ "Waiting for a reaction, or an arbitrary but suitable invite.\n");
+	}
+	
+	public static void showBoard(Board board) {
+		System.out.println("\nCurrent game situation: \n\n" + board.toString() + "\n");
 	}
 	
 	public static void printLobby(String lobby) {
@@ -40,6 +64,7 @@ public class ClientView extends Thread {
 			System.out.println(scan.next());
 		}
 		System.out.println("____________________________________\n");
+		scan.close();
 	}
 	
 	public static void printError(String error) {

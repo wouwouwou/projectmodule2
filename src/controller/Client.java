@@ -4,12 +4,12 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-
 import view.ClientView;
-
 import java.util.Scanner;
-
 import model.Board;
+import model.Player;
+import model.HumanPlayer;
+import model.Mark;
 
 public class Client extends Thread {
 	
@@ -20,6 +20,7 @@ public class Client extends Thread {
 	private Peer peer;
 	private String currentlobby;
 	private Board board;
+	private Player player;
 	private boolean ingame;
 	
 	/**
@@ -107,6 +108,7 @@ public class Client extends Thread {
 	private void peerSetup() throws IOException {
 		peer = new Peer(this);
 		Thread peerthread = new Thread(peer);
+		peerthread.setName(clientname + "-peer");
 		peerthread.start();
 	}
 	
@@ -121,9 +123,15 @@ public class Client extends Thread {
 		Scanner scan = new Scanner(message);
 		scan.skip("INVITE");
 		String opp = scan.next();
-		int width = Integer.parseInt(scan.next());
-		int height = Integer.parseInt(scan.next());
-		if(width == Board.WIDTH && height == Board.HEIGHT && !ingame) {
+		if (scan.hasNext()) {
+			int width = Integer.parseInt(scan.next());
+			int height = Integer.parseInt(scan.next());
+			if(width == Board.WIDTH && height == Board.HEIGHT && !ingame) {
+				out.println("ACCEPT " + opp);
+				out.flush();
+			}
+		}
+		else if (!ingame) {
 			out.println("ACCEPT " + opp);
 			out.flush();
 		}
@@ -143,9 +151,15 @@ public class Client extends Thread {
 		String player1 = scan.next();
 		int number = 1;
 		if (player1.equals(clientname)){
+			board = new Board();
+			player = new HumanPlayer(clientname, Mark.RED);
+			ClientView.showBoard(board);
 			ClientView.printStartGame(scan.next(), number);
 		}
 		else{
+			board = new Board();
+			player = new HumanPlayer(clientname, Mark.BLU);
+			ClientView.showBoard(board);
 			ClientView.printStartGame(player1, number + 1);
 		}
 		scan.close();
@@ -153,11 +167,12 @@ public class Client extends Thread {
 	}
 	
 	protected void setLobby(String message) {
+		System.out.println(message);
 		Scanner scan = new Scanner (message);
 		scan.skip("LOBBY");
 		currentlobby = "";
 		while (scan.hasNext()) {
-			currentlobby = currentlobby + scan.next();
+			currentlobby = currentlobby + scan.next() + " ";
 		}
 		scan.close();
 	}
@@ -176,6 +191,13 @@ public class Client extends Thread {
 		out.flush();
 	}
 	
+	protected void printError(String message) {
+		Scanner scan = new Scanner(message);
+		scan.skip("ERROR");
+		ClientView.printError(scan.nextLine());
+		scan.close();
+	}
+	
 	/**
 	 * Sends an invite to an opponent.
 	 * 
@@ -190,9 +212,29 @@ public class Client extends Thread {
 	}
 	
 	protected void sendMove() {
-		String move = "MOVE";
+		int column = player.determineMove(board);
+		String move = "MOVE " + column;
+		System.out.println(move);
 		out.println(move);
 		out.flush();
+	}
+	
+	protected void setMove(String message) {
+		Scanner scan = new Scanner(message);
+		scan.skip("MOVE");
+		int playernumber = scan.nextInt();
+		if (playernumber == 1) {
+			board.setField(board.determineField(scan.nextInt()), Mark.RED);
+		}
+		else {
+			board.setField(board.determineField(scan.nextInt()), Mark.BLU);
+		}
+		ClientView.showBoard(board);
+		scan.close();
+	}
+	
+	protected void gameEnd(String message) {
+		ClientView.printGameEnd(message);
 	}
 	
 	protected void shutDown() {
@@ -216,7 +258,8 @@ public class Client extends Thread {
     public void run() {
     	try {
     		clientname = ClientView.getClientName();
-    		sock = new Socket(InetAddress.getByName(ClientView.getIP()), 4321);
+    		this.setName(clientname);
+    		sock = new Socket(InetAddress.getByName(ClientView.getIP()), ClientView.getPort());
     		serverSetup();
     		while(true) {
     			

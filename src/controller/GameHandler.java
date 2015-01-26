@@ -1,15 +1,10 @@
 package controller;
 
 import model.Board;
-import model.ClientPlayer;
-import model.ComputerPlayer;
-import model.HumanPlayer;
 import model.Mark;
-import model.Player;
-import view.LocalView;
-import view.StandardInput;
+import java.util.Scanner;
 
-public class GameHandler {
+public class GameHandler implements Runnable {
 	
 	// -- Instance variables -----------------------------------------
 
@@ -22,19 +17,7 @@ public class GameHandler {
      * The board.
      */
     private Board board;
-
-    /*@
-       private invariant players.length == NUMBER_PLAYERS;
-       private invariant (\forall int i; 0 <= i && i < NUMBER_PLAYERS; players[i] != null); 
-     */
-    /**
-     * The 2 players of the game.
-     */
-    private Player[] players;
-
-    /**
-     * The 2 corresponding ClientHandlers.
-     */
+    
     private ClientHandler[] clients;
     
     /*@
@@ -52,8 +35,7 @@ public class GameHandler {
      */
     public GameHandler(ClientHandler p1, ClientHandler p2) {
         board = new Board();
-        players[0] = new ClientPlayer(p1, Mark.RED);
-        players[1] = new ClientPlayer(p2, Mark.BLU);
+        clients = new ClientHandler[NUMBER_PLAYERS];
         clients[0] = p1;
         clients[1] = p2;
         current = 0;
@@ -61,22 +43,10 @@ public class GameHandler {
 
     // -- Commands ---------------------------------------------------
     
-    /**
-     * Gets the players and starts a game.
-     */
     public void run() {
-    	startGame();
-    }
-    
-    /**
-     * Starts the Connect Four game. <br>
-     * Asks after each ended game if the user wants to continue.
-     * Continues until the user doesn't want to play anymore.
-     */
-    public void startGame() {
     	clients[0].sendGameStart(clients[0].getClientName(), clients[1].getClientName());
-    	clients[1].sendGameStart(clients[0].getClientName(), clients[1].getClientName());
-    	play();
+		clients[1].sendGameStart(clients[0].getClientName(), clients[1].getClientName());
+		play();
     }
 
     /**
@@ -86,33 +56,56 @@ public class GameHandler {
      * the changed game situation is printed.
      */
     private void play() {
-        do {
-        	clients[current].requestMove();
-        	try {
-        	this.wait();
-        	} catch (InterruptedException e) {
-        		System.out.println(e.getMessage());
-        		e.printStackTrace();
-        	}
-        } while (!board.hasWinner() && !board.isFull());
-        this.printResult();
+    	clients[current].requestMove();
     }
-
-    /*@
-       requires this.board.gameOver();
-     */
-    /**
-     * Prints the result of the last game. <br>
-     */
-    private void printResult() {
-        if (board.hasWinner()) {
-            Player winner = board.isWinner(players[0].getMark()) ? players[0]
-                    : players[1];
-            System.out.println("Speler " + winner.getName() + " ("
-                    + winner.getMark().toString() + ") has won!");
-        } else {
-            System.out.println("Draw. There is no winner!");
+    
+    protected boolean checkMove(String message) {
+    	int choice = determineMove(message);
+        return board.isColumn(choice) && board.containsEmptyColumn(choice);
+    }
+    
+    protected void move(String message) {
+    	Scanner scan = new Scanner(message);
+    	scan.skip("MOVE");
+    	scan.next();
+    	int choice = scan.nextInt();
+    	scan.close();
+    	if (current == 0) {
+        	board.setField(board.determineField(choice), Mark.RED);
+        }
+        else {
+        	board.setField(board.determineField(choice), Mark.BLU);
+        }
+    	clients[0].moveOk(message);
+    	clients[1].moveOk(message);
+        current = (current+1)%2;
+        if(!board.hasWinner() && !board.isFull()) {
+        	clients[current].requestMove();
+        }
+        else if (board.isWinner(Mark.RED)) {
+        	clients[0].sendGameEnd("WIN", clients[0].getClientName());
+        	clients[1].sendGameEnd("WIN", clients[0].getClientName());
+        }
+        else if (board.isWinner(Mark.BLU)) {
+        	clients[0].sendGameEnd("WIN", clients[1].getClientName());
+        	clients[1].sendGameEnd("WIN", clients[1].getClientName());
+        }
+        else if (board.isFull()) {
+        	clients[0].sendGameEnd("DRAW", "Bord is vol!");
+        	clients[1].sendGameEnd("DRAW", "Bord is vol!");
         }
     }
-	
+    
+    private int determineMove(String message) {
+    	Scanner scan = new Scanner(message);
+    	scan.skip("MOVE");
+    	if(scan.nextInt() == current + 1) {
+    		int res = scan.nextInt();
+    		scan.close();
+    		return res;
+    	}
+    	scan.close();
+    	return -1;
+    	
+    }
 }

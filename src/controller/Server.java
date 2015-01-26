@@ -6,7 +6,6 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
-
 import view.ServerView;
 
 /**
@@ -46,6 +45,7 @@ public class Server extends Thread {
 	public void run() {
 		try {
 			Thread serverview = new Thread(view);
+			serverview.setName("ServerView");
 			serverview.start();
 			ServerSocket serversock = new ServerSocket(4321);
 			ServerView.isActive(InetAddress.getLocalHost().getHostAddress(), serversock.getLocalPort());

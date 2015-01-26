@@ -54,7 +54,6 @@ public class Peer implements Runnable {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-    		client.interrupt();
     		Scanner scan = new Scanner(message);
     		String command = scan.next();
     		switch(command) {
@@ -64,7 +63,16 @@ public class Peer implements Runnable {
     						break;
     		case "START":	client.gameStart(message);
     						break;
+    		case "REQUEST": client.sendMove();
+    						break;
+    		case "MOVE":	client.setMove(message);
+    						break;
+    		case "END":		client.gameEnd(message);
+    						break;
+    		case "ERROR": 	client.printError(message);
+    						break;
     		}
+    		scan.close();
     	}
     }
     
@@ -81,13 +89,19 @@ public class Peer implements Runnable {
     		switch(command) {
     		case "CONNECT":	handler.connectClient(message);
     						break;
-    		case "INVITE": 	handler.sendInviteToOpp(scan.next(), scan.next(), scan.next());
+    		case "INVITE": 	handler.sendInviteToOpp(message);
     						break;
     		case "LOBBY":	handler.sendLobby();
     						break;
     		case "ACCEPT": 	handler.setupGame(message);
     						break;
+    		case "MOVE":	handler.checkMove(message);
+    						break;
+    		case "ERROR":	handler.printError(message);
+    						break;
+    		default:		handler.sendError("InvalidCommand", "Your Command is invalid!");
     		}
+    		scan.close();
     	}
     }
 

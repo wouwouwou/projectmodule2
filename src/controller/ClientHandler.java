@@ -21,6 +21,8 @@ public class ClientHandler extends Thread {
 	private String clientname;
 	private List<String> supportedfeatures = new ArrayList<String>();
 	private Peer peer;
+	private GameHandler game;
+	private int playernumber;
 	
 	/**
 	 * Creates a new ClientHandler for the server.
@@ -54,6 +56,10 @@ public class ClientHandler extends Thread {
 		return sock;
 	}
 	
+	public Peer getPeer() {
+		return peer;
+	}
+	
 	/**
 	 * Connects a client and confirms it with another method.
 	 * 
@@ -70,6 +76,7 @@ public class ClientHandler extends Thread {
 				throw new IOException("CONNECT command has no follow up.");
 			}
 			clientname = scan.next();
+			this.setName(clientname + "-handler");
 			String feature = "";
 			while (scan.hasNext()) {
 				feature = scan.next();
@@ -136,12 +143,27 @@ public class ClientHandler extends Thread {
 	 * @param height
 	 * supported height
 	 */
-	protected void sendInviteToOpp(String name, String width, String height) {
-		for (ClientHandler handler : server.getClients()) {
-			if (!handler.getClientName().equals(name)) {
-				handler.sendInvite(clientname, width, height);
+	protected void sendInviteToOpp(String message) {
+		Scanner scan = new Scanner(message);
+		scan.skip("INVITE");
+		String name = scan.next();
+		if (scan.hasNext()){
+			int width = scan.nextInt();
+			int height = scan.nextInt();
+			for (ClientHandler handler : server.getClients()) {
+				if (handler.getClientName().equals(name)) {
+					handler.sendInvite(clientname, width, height);
+				}
 			}
 		}
+		else {
+			for (ClientHandler handler : server.getClients()) {
+				if (handler.getClientName().equals(name)) {
+					handler.sendInvite(clientname);
+				}
+			}
+		}
+		scan.close();
 	}
 	
 	/**
@@ -156,8 +178,25 @@ public class ClientHandler extends Thread {
 	 * @param height
 	 * heigth of the board the opponent supports
 	 */
-	protected void sendInvite(String name, String width, String height) {
+	protected void sendInvite(String name, int width, int height) {
 		out.println("INVITE " + name + " " + width + " " + height);
+		out.flush();
+	}
+	
+	/**
+	 * Sends an incoming invite to the client.
+	 * 
+	 * @param name
+	 * opponent's name
+	 * 
+	 * @param width
+	 * width of the board the opponent supports
+	 * 
+	 * @param height
+	 * heigth of the board the opponent supports
+	 */
+	protected void sendInvite(String name) {
+		out.println("INVITE " + name);
 		out.flush();
 	}
 	
@@ -171,18 +210,25 @@ public class ClientHandler extends Thread {
 		String opp = scan.next();
 		for (ClientHandler handler : server.getClients()) {
 			if (handler.getClientName().equals(opp)) {
-				GameHandler game = new GameHandler(handler, this);
+				game = new GameHandler(handler, this);
+				handler.setGameHandler(game);
 				game.run();
 			}
 		}
+		scan.close();
 	}
 	
-	protected void sendDecline(String name) {
-		out.println("DECLINE " + name);
-		out.flush();
+	protected void setGameHandler(GameHandler game) {
+		this.game = game;
 	}
 	
 	protected void sendGameStart(String p1, String p2) {
+		if (p1.equals(clientname)) {
+			playernumber = 1;
+		}
+		else {
+			playernumber = 2;
+		}
 		out.println("START " + p1 + " " + p2);
 		out.flush();
 	}
@@ -197,22 +243,30 @@ public class ClientHandler extends Thread {
 		out.flush();
 	}
 	
-	protected void moveOk(short player, short column, String playername) {
-		out.println("MOVE " + player + " " + column + " " + playername);
+	protected void checkMove(String message) {
+		Scanner scan = new Scanner(message);
+		String move = scan.next() + " " + playernumber + " " + scan.nextInt();
+		scan.close();
+		boolean valid = game.checkMove(move);
+		if (valid) {
+			game.move(move);
+		}
+	}
+
+	protected void moveOk(String message) {
+		out.println(message);
 		out.flush();
 	}
 	
-	protected void sendBoard(byte[] board) {
-		int width = 7;
-		int height = 6;
-		out.println("BOARD " + width + " " + height + " " + board);
-		out.flush();
+	protected void printError(String message) {
+		ServerView.printError(message);
 	}
 	
 	public void run() {
 		try {
 			peer = new Peer(this);
 			Thread peerthread = new Thread(peer);
+			peerthread.setName(this.getName() + "-peer");
 			peerthread.start();
 			out = new PrintStream(sock.getOutputStream());
 		} catch (IOException e){

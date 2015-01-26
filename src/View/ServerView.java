@@ -19,6 +19,10 @@ public class ServerView extends Thread {
 		System.out.println(clientname + " succesfully connected! \n");
 	}
 	
+	public static void printError(String error) {
+		System.out.println(error);
+	}
+	
 	public static void showClients(String lobby) {
 		System.out.println("\nCurrent lobby:");
 		System.out.println("____________________________________\n");
