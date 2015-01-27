@@ -8,6 +8,13 @@ import org.junit.Test;
 import model.*;
 import view.StandardInput;
 
+/**
+ *  Test for a Computer Player.
+ * 
+ * @author Jan-Jaap van Raffe and Wouter Bos
+ * @version 1.0
+ */
+
 public class ComputerPlayerTest {
 	private Board board;
 	private ComputerPlayer player1;
@@ -23,7 +30,7 @@ public class ComputerPlayerTest {
 	 * This test also checks whether the computer doesn't try to fill in a full column and fills in another column instead.
 	 */
 	@Test
-	public void test() {
+	public void computerPlayerTest() {
 		int count = 0;
 		for(int i = 0; i < Board.WIDTH * Board.HEIGHT; i++){
 			if(!(board.getField(i) == Mark.XXX)){
