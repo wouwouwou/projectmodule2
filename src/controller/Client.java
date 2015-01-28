@@ -17,7 +17,6 @@ import model.HumanPlayer;
 import model.Mark;
 import model.Player;
 import view.ClientView;
-import view.ConnectFour;
 import view.StandardInput;
 
 /**
@@ -112,7 +111,8 @@ public class Client extends Thread {
 		} else {
 			out.println("ERROR ConnectionFailure");
 			out.flush();
-			ClientView.printError("ERROR ConnectionFailure");
+			ClientView.printError("\nError when connecting to the server. Received message: \n"
+							+ message + "\n");
 		}
 	}
 	
@@ -249,10 +249,7 @@ public class Client extends Thread {
 	 *            The error message from the Server.
 	 */
 	void printError(String error) {
-		Scanner scan = new Scanner(error);
-		scan.skip("ERROR");
-		ClientView.printError(scan.nextLine());
-		scan.close();
+		ClientView.printError(error);
 	}
 
 	/**

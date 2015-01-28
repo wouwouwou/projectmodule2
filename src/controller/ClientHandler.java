@@ -71,7 +71,14 @@ public class ClientHandler extends Thread implements Observer {
 				scan.close();
 				throw new IOException("CONNECT command has no follow up.");
 			}
-			clientname = scan.next();
+			String name = scan.next();
+			for (ClientHandler handler : server.getClients()) {
+				if (name.equals(handler.clientname)) {
+					scan.close();
+					throw new IOException("There already exists a player with this name.");
+				}
+			}
+			clientname = name;
 			this.setName(clientname + "-handler");
 			String feature = "";
 			while (scan.hasNext()) {
@@ -83,8 +90,15 @@ public class ClientHandler extends Thread implements Observer {
 			scan.close();
 			connectionMade();
 		} catch (IOException e) {
-			sendError("ConnectionFailure", e.getMessage());
-			e.printStackTrace();
+			sendError("ConnectionFailure: ", e.getMessage());
+			try {
+				peer.in.close();
+			} catch (IOException e2) {
+				System.out.println("Exception when closing ClientHandler input. " + e.getMessage());
+				e2.printStackTrace();
+			}
+			out.close();
+			this.interrupt();
 		}
 	}
 
@@ -300,15 +314,17 @@ public class ClientHandler extends Thread implements Observer {
 		if (game != null) {
 			game.disconnect(clientname);
 		}
-		ServerView.clientDisconnected(clientname);
-		try {
-			peer.in.close();
-		} catch (IOException e) {
-			System.out.println("Exception when closing ClientHandler input. " + e.getMessage());
-			e.printStackTrace();
+		if (clientname != null) {
+			ServerView.clientDisconnected(clientname);
+			try {
+				peer.in.close();
+			} catch (IOException e) {
+				System.out.println("Exception when closing ClientHandler input. " + e.getMessage());
+				e.printStackTrace();
+			}
+			out.close();
+			server.removeClient(clientname);
 		}
-		out.close();
-		server.removeClient(clientname);
 		this.interrupt();
 	}
 
