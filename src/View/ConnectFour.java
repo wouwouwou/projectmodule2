@@ -11,7 +11,6 @@ import controller.LocalGame;
  * 
  * @author Jan-Jaap van Raffe and Wouter Bos
  * @version v1.0
- *
  */
 public class ConnectFour {
 
@@ -52,7 +51,8 @@ public class ConnectFour {
 	 * Starts a server.
 	 */
 	private static void startServer() {
-		Thread server = new Server();
+		String[] features = new String[0];
+		Thread server = new Server(features);
 		server.start();
 	}
 

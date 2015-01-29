@@ -14,23 +14,19 @@ public class ServerView extends Thread {
 		this.server = serv;
 	}
 
-	public static void isActive(String ip, int port) {
+	public void isActive(String ip, int port) {
 		System.out.println("Server is active on " + ip + ":" + port + " \n");
 	}
 
-	public static void connected(String clientname) {
+	public void connected(String clientname) {
 		System.out.println(clientname + " succesfully connected!");
 	}
 
-	public static void printError(String error) {
-		System.out.println(error);
-	}
-
-	public static void clientDisconnected(String name) {
+	public void clientDisconnected(String name) {
 		System.out.println(name + " has disconnected!");
 	}
 
-	public static void showClients(String lobby) {
+	public void showClients(String lobby) {
 		System.out.println("\nCurrent lobby:");
 		System.out.println("____________________________________\n");
 		Scanner scan = new Scanner(lobby);
@@ -41,7 +37,7 @@ public class ServerView extends Thread {
 		System.out.println("____________________________________\n");
 	}
 
-	public static void printMessage(String message) {
+	public void printString(String message) {
 		System.out.println(message);
 	}
 

@@ -6,7 +6,7 @@ package model;
  * Board class for the game Connect Four.
  * 
  * @author Jan-Jaap van Raffe and Wouter Bos
- * @version 1.2
+ * @version 1.0
  */
 public class Board {
 	

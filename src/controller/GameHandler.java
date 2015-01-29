@@ -7,30 +7,44 @@ import model.Mark;
 import java.util.Scanner;
 import java.util.Observable;
 
+/**
+ * Class for keeping a game between two client(handler)s.
+ * 
+ * @author Jan-Jaap van Raffe and Wouter Bos
+ * @version v1.0
+ */
 public class GameHandler extends Observable implements Runnable {
-
+	
+	
 	// -- Instance variables -----------------------------------------
-
-	public static final int NUMBER_PLAYERS = 2;
-
-	/*
-	 * @ private invariant board != null;
+	
+	//@ private invariant NUMBER_PLAYERS == 2;
+	/**
+	 * The amount of players.
 	 */
+	private static final int NUMBER_PLAYERS = 2;
+
+	//@ private invariant board != null;
 	/**
 	 * The board.
 	 */
 	private Board board;
-
+	
+	/*@ private invariant clients.length == NUMBER_PLAYERS; private invariant
+		(\forall int i; 0 <= i && i < NUMBER_PLAYERS; clients[i] != null);
+	 */
+	/**
+	 * The Client(handler)s.
+	 */
 	private ClientHandler[] clients;
 
-	/*
-	 * @ private invariant 0 <= current && current < NUMBER_PLAYERS;
-	 */
+	//@ private invariant 0 <= current && current < NUMBER_PLAYERS;
 	/**
 	 * Index of the current player.
 	 */
 	private int current;
-
+	
+	
 	// -- Constructors -----------------------------------------------
 
 	/**
@@ -43,41 +57,89 @@ public class GameHandler extends Observable implements Runnable {
 		clients[1] = p2;
 		current = 0;
 	}
-
+	
+	
+	// -- Queries ----------------------------------------------------
+	
+	/**
+	 * Returns the board.
+	 * 
+	 * @return board
+	 */
+	//@ pure
+	public Board getBoard() {
+		return board;
+	}
+	
+	/**
+	 * Returns the current player as integer.
+	 * 
+	 * @return integer of current player
+	 */
+	//@ pure
+	public int getCurrent() {
+		return current;
+	}
+	
 	// -- Commands ---------------------------------------------------
-
+	
+	/**
+	 * Plays the Connect Four game. First the handlers will send a Game-Start message
+	 * to the clients. Then player one will be asked for a move.
+	 */
+	//@ pure
 	public void run() {
 		clients[0].sendGameStart(clients[0].getClientName(),
 				  clients[1].getClientName());
 		clients[1].sendGameStart(clients[0].getClientName(),
 				  clients[1].getClientName());
-		play();
-	}
-
-	/**
-	 * Plays the Connect Four game. <br>
-	 * First the (still empty) board is shown. Then the game is played until it
-	 * is over. Players can make a move one after the other. After each move,
-	 * the changed game situation is printed.
-	 */
-	private void play() {
 		clients[current].requestMove();
 	}
-
-	protected boolean checkMove(String message) {
+	
+	/*@ ensures \result == getBoard().isColumn(determineMove(message)) &&
+		getBoard().containsEmptyColumn(determineMove(message));
+	*/
+	/**
+	 * Checks if the move send by a client is a valid move.
+	 * 
+	 * @param message
+	 * @return
+	 */
+	//@ pure
+	boolean checkMove(String message) {
 		int choice = determineMove(message);
 		return board.isColumn(choice) && board.containsEmptyColumn(choice);
 	}
-
-	protected void disconnect(String client) {
+	
+	/**
+	 * Handles an in game client who disconnects. Lets the other client win and
+	 * sends a message to that client.
+	 * 
+	 * @param client
+	 *            name of disconnected client
+	 */
+	//@ pure
+	void disconnect(String client) {
 		if (clients[0].getClientName().equals(client)) {
 			clients[1].sendGameEnd("DISCONNECT", clients[1].getClientName());
 		} else {
 			clients[0].sendGameEnd("DISCONNECT", clients[0].getClientName());
 		}
 	}
-
-	protected void move(String message) {
+	
+	/*@	requires checkMove(message);
+	 	ensures !\old(getBoard()).equals(getBoard()) &&
+	 	getCurrent() == (\old(getCurrent()) + 1) % 2;
+	 */
+	/**
+	 * Does the move given by the client(handler). Checks if there is a winner.
+	 * If so, sends a Game-End message to both client(handler)s. If not, asks
+	 * the other client for a move.
+	 * 
+	 * @param message
+	 *            the move message from the client
+	 */
+	void move(String message) {
 		Scanner scan = new Scanner(message);
 		scan.skip("MOVE");
 		scan.next();
@@ -105,8 +167,21 @@ public class GameHandler extends Observable implements Runnable {
 			clients[1].sendGameEnd("DRAW", "Bord is vol!");
 		}
 	}
-
-	private int determineMove(String message) {
+	
+	/*@ requires message != null && message.startsWith("MOVE");
+	 	ensures \result >= -1;
+	 */
+	/**
+	 * Gets the actual move as an integer out of the move-command send by the
+	 * client. Returns -1 if the command is from the wrong client.
+	 * 
+	 * @param message
+	 *            the move-command send by the client
+	 * 
+	 * @return the move as integer
+	 */
+	//@ pure
+	int determineMove(String message) {
 		Scanner scan = new Scanner(message);
 		scan.skip("MOVE");
 		if (scan.nextInt() == current + 1) {

@@ -1,6 +1,6 @@
 package controller;
 
-//TODO Check
+//TODO DONE
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -17,26 +17,140 @@ import view.StandardInput;
  * 
  * @author Jan-Jaap van Raffe and Wouter Bos
  * @version v1.0
- * 
  */
 public class Server extends Thread {
-
-	private List<ClientHandler> clients = new ArrayList<ClientHandler>();
-	private List<String> features = new ArrayList<String>();
-	private ServerView view = new ServerView(this);
-
-	private void addClient(ClientHandler client) {
-		clients.add(client);
+	
+	
+	// -- Instance variables -----------------------------------------
+	
+	//@ private invariant clients != null;
+	/**
+	 * A list of all connected clients.
+	 */
+	private List<ClientHandler> clients;
+	
+	//@ private invariant features != null;
+	/**
+	 * A list of all features the server supports.
+	 */
+	private List<String> features;
+	
+	//@ private invariant clientview != null;
+	/**
+	 * The view of this server.
+	 */
+	private ServerView clientview;
+	
+	//@ private invariant ssock != null;
+	/**
+	 * The ServerSocket.
+	 */
+	private ServerSocket ssock;
+	
+	
+	// -- Constructors -----------------------------------------------
+	
+	/*@ ensures getFeatures() != null && getClients() != null &&
+	 	getView() != null && getServerSocket() != null;
+	 */
+	/**
+	 * Initializes a server.
+	 * 
+	 * @param args
+	 *            the supported features
+	 */
+	public Server(String[] args) {
+		clients = new ArrayList<ClientHandler>();
+		features = new ArrayList<String>();
+		if (args != null) {
+			for (String feature : args) {
+				addFeature(feature);
+			}
+		}
+		clientview = new ServerView(this);
+		while (ssock == null) {
+			ssock = setupServerSocket();
+		}
 	}
-
-	List<String> getFeatures() {
+	
+	
+	// -- Queries ----------------------------------------------------
+	
+	/**
+	 * Returns a List with all features of this server.
+	 * 
+	 * @return features of the server.
+	 */
+	//@ pure
+	public List<String> getFeatures() {
 		return features;
 	}
-
+	
+	/**
+	 * Returns a List with all connected clients.
+	 * 
+	 * @return all connected clients
+	 */
+	//@ pure
 	public List<ClientHandler> getClients() {
 		return clients;
 	}
-
+	
+	/**
+	 * Returns the view of the server.
+	 * 
+	 * @return server's view
+	 */
+	//@ pure
+	public ServerView getView() {
+		return clientview;
+	}
+	
+	/**
+	 * Returns the ServerSocket of the server.
+	 * 
+	 * @return server's ServerSocket
+	 */
+	//@ pure
+	public ServerSocket getServerSocket() {
+		return ssock;
+	}
+	
+	/**
+	 * Shows the lobby in the ServerView.
+	 */
+	//@ pure
+	public void showLobby() {
+		String lobby = "";
+		for (ClientHandler client : clients) {
+			lobby = lobby + " " + client.getClientName();
+		}
+		clientview.showClients(lobby);
+	}
+	
+	
+	// -- Commands ---------------------------------------------------
+	
+	/*@ requires client != null;
+	 	ensures \old(getClients()) != getClients() && getClients().contains(client);
+	 */
+	/**
+	 * Adds a new client to the list of connected clients.
+	 * 
+	 * @param client
+	 *            client to be added
+	 */
+	private void addClient(ClientHandler client) {
+		clients.add(client);
+	}
+	
+	//@ ensures \old(getClients()) != getClients() && !getClients().contains(client);
+	/**
+	 * Removes a client from the list of connected clients.
+	 * 
+	 * @param client
+	 *            client to be removed
+	 */
 	synchronized void removeClient(String client) {
 		Set<ClientHandler> s = new HashSet<ClientHandler>();
 		for (ClientHandler handler : clients) {
@@ -46,42 +160,51 @@ public class Server extends Thread {
 		}
 		clients.retainAll(s);
 	}
-
-	public void showLobby() {
-		String lobby = "";
-		for (ClientHandler client : clients) {
-			lobby = lobby + " " + client.getClientName();
-		}
-		ServerView.showClients(lobby);
+	
+	//@ ensures \old(getFeatures()) != getFeatures() && features.contains(feature);
+	/**
+	 * Adds a feature to the list of features.
+	 * 
+	 * @param feature
+	 *            feature to be added
+	 */
+	private void addFeature(String feature) {
+		features.add(feature);
 	}
-
-	private ServerSocket setup() {
+	
+	/**
+	 * Tries to make a new ServerSocket. If succeeded, returns it.
+	 * Else prints an error.
+	 * 
+	 * @return ServerSocket if succeeded. Else null.
+	 */
+	//@ pure
+	private ServerSocket setupServerSocket() {
 		ServerSocket res = null;
 		try {
 			res = new ServerSocket(
 					StandardInput
 							.readInt("\n> Insert the port number you want to use \n"));
 		} catch (IOException e) {
-			ServerView.printError("\nThis portnumber is already in use!");
+			clientview.printString("\nThis portnumber is already in use!");
 		}
 		return res;
 	}
-
+	
+	/**
+	 * Runs the server and waits for clients to connect. If a client
+	 * connects, makes a new ClientHandler and starts it as a thread.
+	 * Also adds the ClientHandler to the list of connected clients.
+	 */
 	public void run() {
-		ServerSocket serversock = null;
-		while (serversock == null) {
-			serversock = setup();
-		}
 		try {
-			Thread serverview = new Thread(view);
-			serverview.setName("ServerView");
+			Thread serverview = new Thread(clientview);
 			serverview.start();
-			ServerView.isActive(InetAddress.getLocalHost().getHostAddress(),
-					  serversock.getLocalPort());
+			clientview.isActive(InetAddress.getLocalHost().getHostAddress(),
+					  ssock.getLocalPort());
 			while (true) {
-				Socket sock = serversock.accept();
+				Socket sock = ssock.accept();
 				ClientHandler handler = new ClientHandler(this, sock);
-				handler.start();
 				addClient(handler);
 			}
 		} catch (UnknownHostException e) {

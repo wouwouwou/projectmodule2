@@ -11,7 +11,6 @@ import java.util.Scanner;
  * @version v1.0
  *
  */
-
 public class StandardInput {
 
 	/**

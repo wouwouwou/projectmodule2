@@ -6,7 +6,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
-import view.ServerView;
 
 /**
  * Peer for recieving messages.
@@ -111,7 +110,7 @@ public class Peer implements Runnable {
 			String message = null;
 			try {
 				message = in.readLine();
-				ServerView.printMessage(message);
+				handler.getServer().getView().printString(message);
 			} catch (IOException e) {
 				handler.clientShutDown();
 			}

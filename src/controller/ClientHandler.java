@@ -1,31 +1,71 @@
 package controller;
 
-//TODO Check, also make a method in the server class to get the serverview. Then implement the shit.
+//TODO DONE
 
 import java.net.Socket;
 import java.io.*;
 import java.util.*;
-import view.ServerView;
 
 /**
  * Class for handling communication with a Client.
  * 
  * @author Jan-Jaap van Raffe and Wouter Bos
  * @version v1.0
- *
  */
-
-public class ClientHandler extends Thread implements Observer {
-
+public class ClientHandler implements Observer {
+	
+	
+	// -- Instance variables -----------------------------------------
+	
+	//@ private invariant server != null;
+	/**
+	 * The main server of this ClientHandler.
+	 */
 	private Server server;
+	
+	//@ private invariant socket != null;
+	/**
+	 * The socket of this handler.
+	 */
 	private Socket socket;
+	
+	//@ private invariant socket != null;
+	/**
+	 * The output of this handler.
+	 */
 	private PrintStream out;
+	
+	/**
+	 * The name of the client this handler handles with.
+	 */
 	private String clientname;
-	private List<String> supportedfeatures = new ArrayList<String>();
+	
+	/**
+	 * The list of features both the server and the client supports.
+	 */
+	private List<String> supportedfeatures;
+	
+	/**
+	 * Peer thread for all incoming messages from the Client.
+	 */
 	private Thread peer;
+	
+	/**
+	 * GameHandler for handling a game.
+	 */
 	private GameHandler game;
+	
+	/**
+	 * The player number the client plays with.
+	 */
 	private int playernumber;
-
+	
+	
+	// -- Constructors -----------------------------------------------
+	
+	/*@ ensures getServer() != null && getSocket() != null &&
+		getPeer().isAlive() && getOutput() != null;
+	 */
 	/**
 	 * Creates a new ClientHandler for the server.
 	 * 
@@ -48,31 +88,103 @@ public class ClientHandler extends Thread implements Observer {
 			e.printStackTrace();
 		}
 	}
-
+	
+	
+	// -- Queries ----------------------------------------------------
+	
 	/**
 	 * Gets the name of the Client.
 	 * 
 	 * @return name
 	 */
+	//@ pure
 	public String getClientName() {
 		return clientname;
 	}
-
+	
+	/**
+	 * Gets the main server.
+	 * 
+	 * @return server
+	 */
+	//@ pure
+	public Server getServer() {
+		return server;
+	}
+	
 	/**
 	 * Gets the socket of this handler.
 	 * 
 	 * @return socket
 	 */
+	//@ pure
 	public Socket getSocket() {
 		return socket;
 	}
-
+	
 	/**
-	 * Connects a client and confirms it with another method.
+	 * Gets the output of this handler.
 	 * 
-	 * Gets the name from the client. Also gets the features and compares them
-	 * with the features of the server. Remembers if there are corresponding
-	 * features.
+	 * @return handler's output
+	 */
+	//@ pure
+	public PrintStream getOutput() {
+		return out;
+	}
+	
+	/**
+	 * Gets the list of features supported by the server and the client.
+	 * 
+	 * @return supported feature list
+	 */
+	//@ pure
+	public List<String> getFeatures() {
+		return supportedfeatures;
+	}
+	
+	/**
+	 * Gets the peer thread of this handler.
+	 * 
+	 * @return handlers peer thread
+	 */
+	//@ pure
+	public Thread getPeer() {
+		return peer;
+	}
+	
+	/**
+	 * Gets the GameHandler this handler has to deal with.
+	 * 
+	 * @return Game Handler
+	 */
+	//@ pure
+	public GameHandler getGameHandler() {
+		return game;
+	}
+	
+	/**
+	 * Gets the player number of the client this handler deals with.
+	 * 
+	 * @return player number
+	 */
+	//@ pure
+	public int getPlayerNumber() {
+		return playernumber;
+	}
+	
+	
+	// -- Commands ---------------------------------------------------
+	
+	/*@ requires message.startsWith("CONNECT");
+	 	ensures !\old(getClientName()).equals(getClientName()) &&
+	 			!\old(getFeatures()).equals(getFeatures());
+	 */
+	/**
+	 * Connects a client and confirms it with the connectionMade() method.
+	 * 
+	 * Gets the name from the client's message. Also gets the features and
+	 * compares them with the features of the server. Remembers if there are
+	 * corresponding features.
 	 */
 	protected void connectClient(String message) {
 		try {
@@ -91,6 +203,7 @@ public class ClientHandler extends Thread implements Observer {
 			}
 			clientname = name;
 			String feature = "";
+			supportedfeatures = new ArrayList<String>();
 			while (scan.hasNext()) {
 				feature = scan.next();
 				if (server.getFeatures().contains(feature)) {
@@ -104,30 +217,32 @@ public class ClientHandler extends Thread implements Observer {
 			clientShutDown();
 		}
 	}
-
+	
 	/**
 	 * Confirms the connection made. Sends also the supported features.
 	 */
+	//@ pure
 	protected void connectionMade() {
 		String outpackage = "OK ";
 		for (String feature : supportedfeatures) {
 			outpackage = outpackage + feature + " ";
 		}
-		ServerView.printMessage(outpackage);
+		server.getView().printString(outpackage);
 		out.println(outpackage);
 		out.flush();
-		ServerView.connected(clientname);
+		server.getView().connected(clientname);
 	}
 
 	/**
 	 * Sends the lobby to the Client.
 	 */
+	//@ pure
 	protected void sendLobby() {
 		String lobby = "LOBBY ";
 		for (ClientHandler client : server.getClients()) {
 			lobby = lobby + client.getClientName() + " ";
 		}
-		ServerView.printMessage(lobby);
+		server.getView().printString(lobby);
 		out.println(lobby);
 		out.flush();
 	}
@@ -141,9 +256,10 @@ public class ClientHandler extends Thread implements Observer {
 	 * @param message
 	 *            error specification
 	 */
+	//@ pure
 	protected void sendError(String header, String message) {
 		String error = "ERROR " + header + " " + message;
-		ServerView.printMessage(error);
+		server.getView().printString(error);
 		out.println(error);
 		out.flush();
 	}
@@ -152,7 +268,7 @@ public class ClientHandler extends Thread implements Observer {
 	 * Sends an invite to the opponent.
 	 * 
 	 * @param name
-	 *            Client his own name
+	 *            Client's own name
 	 * 
 	 * @param width
 	 *            supported width
@@ -160,6 +276,7 @@ public class ClientHandler extends Thread implements Observer {
 	 * @param height
 	 *            supported height
 	 */
+	//@ pure
 	protected void sendInviteToOpp(String message) {
 		Scanner scan = new Scanner(message);
 		scan.skip("INVITE");
@@ -183,7 +300,7 @@ public class ClientHandler extends Thread implements Observer {
 	}
 
 	/**
-	 * Sends an incoming invite to the client.
+	 * Sends an incoming invite (with board size) to the client.
 	 * 
 	 * @param name
 	 *            opponent's name
@@ -194,35 +311,38 @@ public class ClientHandler extends Thread implements Observer {
 	 * @param height
 	 *            heigth of the board the opponent supports
 	 */
+	//@ pure
 	protected void sendInvite(String name, int width, int height) {
 		String invite = "INVITE " + name + " " + width + " " + height;
-		ServerView.printMessage(invite);
+		server.getView().printString(invite);
 		out.println(invite);
 		out.flush();
 	}
 
 	/**
-	 * Sends an incoming invite to the client.
+	 * Sends an incoming invite (without board size) to the client.
 	 * 
 	 * @param name
 	 *            opponent's name
-	 * 
-	 * @param width
-	 *            width of the board the opponent supports
-	 * 
-	 * @param height
-	 *            heigth of the board the opponent supports
 	 */
+	//@ pure
 	protected void sendInvite(String name) {
 		String invite = "INVITE " + name;
-		ServerView.printMessage(invite);
+		server.getView().printString(invite);
 		out.println(invite);
 		out.flush();
 	}
-
+	
+	//@ ensures getGameHandler() != null && getGameHandler().countObservers() == 2;
 	/**
+	 * Sets up a game between two Client(handler)s. Fist skips the ACCEPT
+	 * command from the client's message. Then makes a new GameHandler and
+	 * assigns these to the two ClientHandlers. Also adds the Clienthandlers as
+	 * observers to the Observable GameHandler. Then starts a new thread for the
+	 * GameHandler.
 	 * 
-	 * @param name
+	 * @param message
+	 *            the incoming ACCEPT message from the client.
 	 */
 	protected void setupGame(String message) {
 		Scanner scan = new Scanner(message);
@@ -240,7 +360,8 @@ public class ClientHandler extends Thread implements Observer {
 		}
 		scan.close();
 	}
-
+	
+	//@ requires arg != null;
 	/**
 	 * This update is getting called when the Observable (the GameHandler) calls
 	 * a notifyObservers(). Gets an argument form the GameHandler, which is a
@@ -252,16 +373,37 @@ public class ClientHandler extends Thread implements Observer {
 	 * @param arg
 	 *            The argument which the Observable passes through.
 	 */
+	//@ pure
 	public void update(Observable o, Object arg) {
 		if (arg instanceof String) {
 			moveOk((String) arg);
 		}
 	}
-
+	
+	/*@ requires gamehandler != null;
+	 	ensures getGameHandler().equals(gamehandler);
+	 */
+	/**
+	 * Assigns a GameHandler to this ClientHandler.
+	 * 
+	 * @param gamehandler
+	 *            the gamehandler to be assigned
+	 */
 	protected void setGameHandler(GameHandler gamehandler) {
-		this.game = gamehandler;
+		game = gamehandler;
 	}
-
+	
+	//@ requires p1 != null && !p1.equals("") && p2 != null && !p2.equals("");
+	/**
+	 * Sends a Start Game message to the client.
+	 * 
+	 * @param p1
+	 *            the name of player 1
+	 * 
+	 * @param p2
+	 *            the name of player 2
+	 */
+	//@ pure
 	protected void sendGameStart(String p1, String p2) {
 		if (p1.equals(clientname)) {
 			playernumber = 1;
@@ -269,53 +411,102 @@ public class ClientHandler extends Thread implements Observer {
 			playernumber = 2;
 		}
 		String start = "START " + p1 + " " + p2;
-		ServerView.printMessage(start);
+		server.getView().printString(start);
 		out.println(start);
 		out.flush();
 	}
-
+	
+	//@ requires type != null && !type.equals("") && winner != null && !winner.equals("");
+	/**
+	 * Sends a Game End message to the client.
+	 * 
+	 * @param type
+	 *            type of game end
+	 * 
+	 * @param winner
+	 *            the winner of the game
+	 */
+	//@ pure
 	protected void sendGameEnd(String type, String winner) {
 		String end = "END " + type + " " + winner;
-		ServerView.printMessage(end);
+		server.getView().printString(end);
 		game = null;
 		out.println(end);
 		out.flush();
 	}
-
+	
+	/**
+	 * Requests a move from the client.
+	 */
+	//@ pure
 	protected void requestMove() {
-		ServerView.printMessage("REQUEST");
+		server.getView().printString("REQUEST");
 		out.println("REQUEST");
 		out.flush();
 	}
-
+	
+	//@ requires message != null && !message.equals("");
+	/**
+	 * Checks the move given by the client, if there exitst a GameHandler. If
+	 * the move is a valid move, then passes it to the GameHandler. Otherwise
+	 * requests another move.
+	 * 
+	 * @param message
+	 *            move message sended by the client
+	 */
 	protected void checkMove(String message) {
 		Scanner scan = new Scanner(message);
 		String move = scan.next() + " " + playernumber + " " + scan.nextInt();
 		scan.close();
 		if (game == null) {
 			sendError("GameError", "The game doesn't exist anymore.");
-			ServerView.printError("The Game doesn't exist anymore");
+			server.getView().printString("The Game doesn't exist anymore");
 		} else {
 			boolean valid = game.checkMove(move);
 			if (valid) {
 				game.move(move);
+			} else {
+				requestMove();
 			}
 		}
 	}
-
+	
+	//@ requires message != null && !message.equals("");
+	/**
+	 * Sends a confirmed move from the GameHandler to the Client.
+	 * 
+	 * @param message
+	 *            the command for a confirmed move
+	 */
+	//@ pure
 	protected void moveOk(String message) {
-		ServerView.printMessage(message);
+		server.getView().printString(message);
 		out.println(message);
 		out.flush();
 	}
-
+	
+	//@ requires message != null && !message.equals("");
+	/**
+	 * Prints an error message to the server's view.
+	 * 
+	 * @param message
+	 *            the error message given by the client
+	 */
+	//@ pure
 	protected void printError(String message) {
-		ServerView.printError(message);
+		server.getView().printString(message);
 	}
 	
+	//@ ensures getGameHandler() == null && !getServer().getClients().contains(getClientName());
+	/**
+	 * Handles the shutdown of the server. If there exists a game, disconnects
+	 * the client from it and sets the game to null. Closes the output and
+	 * removes the client from the server's list.
+	 */
 	public void serverShutDown() {
 		if (game != null) {
 			game.disconnect(clientname);
+			game = null;
 		}
 		if (clientname != null) {
 			out.close();
@@ -323,29 +514,25 @@ public class ClientHandler extends Thread implements Observer {
 		} else {
 			server.removeClient(null);
 		}
-		this.interrupt();
 	}
 	
+	//@ ensures getGameHandler() == null && !getServer().getClients().contains(getClientName());
+	/**
+	 * Handles the shutdown of a client. If there exists a game, disconnects the
+	 * client from it and sets the game to null. Closes the output and removes
+	 * the client from the server's list. Shows also a message that the client
+	 * has disconnected.
+	 */
 	public void clientShutDown() {
 		if (game != null) {
 			game.disconnect(clientname);
 		}
 		if (clientname != null) {
-			ServerView.clientDisconnected(clientname);
+			server.getView().clientDisconnected(clientname);
 			out.close();
 			server.removeClient(clientname);
 		} else {
 			server.removeClient(null);
 		}
-		this.interrupt();
-	}
-
-	/**
-	 * Run method for starting this Thread. Sets up a Peer for incoming messages
-	 * from the Client. Also sets up a PrintStream to send messages to the
-	 * Client.
-	 */
-	public void run() {
-		
 	}
 }

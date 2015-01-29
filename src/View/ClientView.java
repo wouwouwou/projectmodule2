@@ -14,25 +14,28 @@ import model.Board;
  */
 public class ClientView extends Thread {
 	
+	
+	// -- Instance variables -----------------------------------------
+	
 	private Client client;
 	
-	public ClientView (Client cli) {
+	public ClientView(Client cli) {
 		client = cli;
 	}
 	
-	public static String getClientName() {
+	public String getClientName() {
 		return StandardInput.getString("\n> What's your name? \n");
 	}
 
-	public static String getIP() {
+	public String getIP() {
 		return StandardInput.getString("\n> Insert the ip-address. \n");
 	}
 
-	public static int getPort() {
+	public int getPort() {
 		return StandardInput.readInt("\n> Insert the port. \n");
 	}
 
-	public static void printGameEnd(String message) {
+	public void printGameEnd(String message) {
 		Scanner scan = new Scanner(message);
 		scan.skip("END");
 		String wincondition = scan.next();
@@ -49,33 +52,33 @@ public class ClientView extends Thread {
 		scan.close();
 	}
 
-	public static void serverDisconnected() {
+	public void serverDisconnected() {
 		System.out.println("The server disconnected!\n"
 						+ "Please restart the program.\n");
 	}
 
-	public static void invitesSended() {
+	public void invitesSended() {
 		System.out
 						.println("Invites sended to every member in the lobby.\n"
 						+ "Waiting for a reaction, or an arbitrary but suitable invite.\n");
 	}
 	
-	public static void showHint(int hint) {
+	public void showHint(int hint) {
 		System.out.println("Hint: " + hint + " is a possible move!\n");
 	}
 
-	public static void showBoard(Board board) {
+	public void showBoard(Board board) {
 		System.out.println("\nCurrent game situation: \n\n" + board.toString()
 						+ "\n");
 	}
 
-	public static void showGameStart(Board board, String opp, int number) {
+	public void showGameStart(Board board, String opp, int number) {
 		System.out.println("\nYou started a game with " + opp);
-		ClientView.showBoard(board);
+		showBoard(board);
 		System.out.println("You are player " + number + "\n");
 	}
 
-	public static void printLobby(String lobby) {
+	public void printLobby(String lobby) {
 		System.out.println("Current lobby:");
 		System.out.println("____________________________________\n");
 		Scanner scan = new Scanner(lobby);
@@ -86,15 +89,11 @@ public class ClientView extends Thread {
 		scan.close();
 	}
 
-	public static void printError(String error) {
-		System.out.println(error);
+	public void printString(String string) {
+		System.out.println(string);
 	}
 
-	public static void printMessage(String message) {
-		System.out.println(message);
-	}
-
-	public static void connected() {
+	public void connected() {
 		System.out
 				.println("\nYou succesfully made a connection with the server!\n");
 	}
