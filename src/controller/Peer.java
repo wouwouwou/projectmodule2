@@ -1,7 +1,5 @@
 package controller;
 
-//TODO Check
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,21 +12,37 @@ import java.util.Scanner;
  * @version v1.0
  */
 public class Peer implements Runnable {
-
-	protected BufferedReader in;
-	protected ClientHandler handler;
-	protected Client client;
-
+	
+	
+	// -- Instance variables -----------------------------------------
+	
+	//@ private invariant in != null;
 	/**
-	 * Constructor. Creates a peer object for a ClientHandler.
-	 * 
-	 * @param handler
-	 *            the ClientHandler
-	 * 
-	 * @param sock
-	 *            the socket of the ClientHandler
+	 * The input. Used to receive all messages.
 	 */
-
+	private BufferedReader in;
+	
+	/**
+	 * Corresponding handler. Can be null if this peer corresponds with a Client.
+	 */
+	private ClientHandler handler;
+	
+	/**
+	 * Corresponding client. Can be null if this peer corresponds with a ClientHandler.
+	 */
+	private Client client;
+	
+	
+	// -- Constructors -----------------------------------------------
+	
+	//@ ensures getHandler() != null;
+	/**
+	 * Creates a peer object for a ClientHandler. Gets the input from the
+	 * handler's socket.
+	 * 
+	 * @param clienthandler
+	 *            the ClientHandler
+	 */
 	public Peer(ClientHandler clienthandler) {
 		handler = clienthandler;
 		try {
@@ -39,15 +53,14 @@ public class Peer implements Runnable {
 			e.printStackTrace();
 		}
 	}
-
+	
+	//@ ensures getClient() != null;
 	/**
-	 * Constructor. Creates a peer object for a Client.
+	 * Creates a peer object for a Client. Gets the input from the client's
+	 * socket.
 	 * 
-	 * @param client
+	 * @param cli
 	 *            the Client
-	 * 
-	 * @param sock
-	 *            the socket of the Client
 	 */
 	public Peer(Client cli) {
 		client = cli;
@@ -59,7 +72,71 @@ public class Peer implements Runnable {
 			e.printStackTrace();
 		}
 	}
-
+	
+	
+	// -- Queries ----------------------------------------------------
+	
+	/**
+	 * Gets the input.
+	 * 
+	 * @return input
+	 */
+	//@ pure
+	public BufferedReader getInput() {
+		return in;
+	}
+	
+	/**
+	 * Gets the corresponding ClientHandler.
+	 * 
+	 * @return ClientHandler
+	 */
+	//@ pure
+	public ClientHandler getHandler() {
+		return handler;
+	}
+	
+	/**
+	 * Gets the corresponding Client.
+	 *  
+	 * @return Client
+	 */
+	//@ pure
+	public Client getClient() {
+		return client;
+	}
+	
+	//@ ensures \result.equals("Client") || \result.equals("ClientHandler");
+	/**
+	 * Gets the type of this Peer as a String.
+	 * Client means a peer for a client.
+	 * ClientHandler means a peer for a ClientHandler.
+	 * 
+	 * @return String "Client" || String "ClientHandler"
+	 */
+	//@ pure
+	public String getType() {
+		boolean cli = false;
+		if (getClient() != null) {
+			cli = true;
+		}
+		if (cli) {
+			return "Client";
+		}
+		return "ClientHandler";
+	}
+	
+	// -- Commands ---------------------------------------------------
+	
+	
+	/**
+	 * Listens as a client to the input. If a message comes in, looks for the
+	 * first word. Calls the method corresponding to the command. More
+	 * information is available in the protocol.
+	 * 
+	 * When the input gives an IOException, shutDown method from the Client will
+	 * be called. Also breaks the while loop.
+	 */
 	private void listenClient() {
 		boolean doorgaan = true;
 		while (doorgaan) {
@@ -103,7 +180,15 @@ public class Peer implements Runnable {
 			scan.close();
 		}
 	}
-
+	
+	/**
+	 * Listens as a handler to the input. If a message comes in, looks for the
+	 * first word. Calls the method corresponding to the command. More
+	 * information is available in the protocol.
+	 * 
+	 * When the input gives an IOException, shutDown method from the handler
+	 * will be called. Also breaks the while loop.
+	 */
 	private void listenHandler() {
 		boolean doorgaan = true;
 		while (doorgaan) {
@@ -148,7 +233,12 @@ public class Peer implements Runnable {
 			scan.close();
 		}
 	}
-
+	
+	/**
+	 * Runs the peer. If the peer has a client, then listens to the input as a
+	 * client. If the peer has a handler, then listens to the input as a
+	 * handler. Closes input when done listening.
+	 */
 	public void run() {
 		if (client != null) {
 			listenClient();

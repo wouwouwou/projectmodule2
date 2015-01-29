@@ -1,7 +1,5 @@
 package view;
 
-//TODO Check
-
 import model.Board;
 
 /**
@@ -14,6 +12,9 @@ public class LocalView {
 
 	/**
 	 * Prints the game situation.
+	 * 
+	 * @param board
+	 *            the board to show
 	 */
 	public static void showBoard(Board board) {
 		System.out.println("\nCurrent game situation: \n\n" + board.toString()

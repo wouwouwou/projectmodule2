@@ -1,7 +1,5 @@
 package model;
 
-//TODO DONE
-
 /**
  * Represents a mark in the Connect Four game. There are three possible values:
  * Mark.XXX, Mark.RED and Mark.BLU.

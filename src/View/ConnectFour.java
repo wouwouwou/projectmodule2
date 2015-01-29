@@ -1,7 +1,5 @@
 package view;
 
-//TODO DONE
-
 import controller.Server;
 import controller.Client;
 import controller.LocalGame;

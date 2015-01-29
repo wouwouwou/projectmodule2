@@ -1,18 +1,18 @@
 package view;
 
-//TODO Check
-
 import java.util.Scanner;
 
 /**
- * Support class for other view classes.
+ * Support class for other classes.
  * 
  * @author Jan-Jaap van Raffe and Wouter Bos
  * @version v1.0
- *
  */
 public class StandardInput {
 
+	/*@ requires prompt != null && !prompt.equals("") &&
+		yes != null && !yes.equals("") && no != null && !no.equals("");
+	*/
 	/**
 	 * Prints a question which can be answered by yes (true) or no (false).
 	 * After prompting the question on standard out, this method reads a String
@@ -33,14 +33,19 @@ public class StandardInput {
 	 */
 	public static boolean readBoolean(String prompt, String yes, String no) {
 		String answer;
+		Scanner in;
 		do {
 			System.out.print(prompt);
-			Scanner in = new Scanner(System.in);
+			in = new Scanner(System.in);
 			answer = in.hasNextLine() ? in.nextLine() : null;
 		} while (answer == null || (!answer.equals(yes) && !answer.equals(no)));
+		in.close();
 		return answer.equals(yes);
 	}
-
+	
+	/*@ requires prompt != null && !prompt.equals("") &&
+		option1 != null && !option1.equals("") && option2 != null && !option2.equals("");
+	 */
 	/**
 	 * Prints a question which can be answered with two options. After prompting
 	 * the question on standard out, this method reads a String from standard in
@@ -62,33 +67,15 @@ public class StandardInput {
 	public static String readChoice(String prompt, String option1,
 				 String option2) {
 		String answer;
+		Scanner in;
 		do {
 			System.out.print(prompt);
-			Scanner in = new Scanner(System.in);
+			in = new Scanner(System.in);
 			answer = in.hasNextLine() ? in.nextLine() : null;
 		} while (answer == null
 				|| (!answer.equals(option1) && !answer.equals(option2)));
+		in.close();
 		return answer;
-	}
-
-	/**
-	 * Prints a question which can be answered with a String. After prompting
-	 * the question on standard out, this method reads a String from standard in
-	 * and gives it back to the caller.
-	 * 
-	 * @param prompt
-	 *            the question to print.
-	 * 
-	 * @return the string typed.
-	 */
-	public static boolean readServerShutdown() {
-		String res;
-		do {
-			System.out.print("Type EXIT to shut the server down");
-			Scanner in = new Scanner(System.in);
-			res = in.hasNextLine() ? in.nextLine() : null;
-		} while (!res.equals("EXIT"));
-		return true;
 	}
 
 	/**
@@ -102,19 +89,26 @@ public class StandardInput {
 	public static int readInt(String prompt) {
 		int value = 0;
 		boolean intRead = false;
+		Scanner in;
+		Scanner scannerline;
 		do {
 			System.out.print(prompt);
-			Scanner in = new Scanner(System.in);
+			in = new Scanner(System.in);
 			String line = in.nextLine();
-			Scanner scannerLine = new Scanner(line);
-			if (scannerLine.hasNextInt()) {
+			scannerline = new Scanner(line);
+			if (scannerline.hasNextInt()) {
 				intRead = true;
-				value = scannerLine.nextInt();
+				value = scannerline.nextInt();
 			}
 		} while (!intRead);
+		in.close();
+		scannerline.close();
 		return value;
 	}
-
+	
+	/*@ requires prompt != null && !prompt.equals("");
+	 	ensures !\result.equals("") && \result != null;
+	 */
 	/**
 	 * Prints a question which can be answered with a String. After prompting
 	 * the question on standard out, this method reads a String from standard in
@@ -127,11 +121,13 @@ public class StandardInput {
 	 */
 	public static String getString(String prompt) {
 		String res;
+		Scanner in;
 		do {
 			System.out.print(prompt);
-			Scanner in = new Scanner(System.in);
+			in = new Scanner(System.in);
 			res = in.hasNextLine() ? in.nextLine() : null;
-		} while (res.equals(""));
+		} while (res.equals("") || res == null);
+		in.close();
 		return res;
 	}
 

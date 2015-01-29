@@ -1,7 +1,5 @@
 package tests;
 
-//TODO Check
-
 import static org.junit.Assert.*;
 
 import org.junit.Before;
@@ -9,22 +7,28 @@ import org.junit.Test;
 import model.*;
 
 /**
- *  Test for a Computer Player.
+ * Test for a Computer Player.
  * 
  * @author Jan-Jaap van Raffe and Wouter Bos
  * @version 1.0
  */
-
 public class ComputerPlayerTest {
+	
 	private Board board;
 	private ComputerPlayer player1;
 
+	
+	// -- Set up -----------------------------------------------------
+	
 	@Before
 	public void setUp() throws Exception {
 		board = new Board();
 		player1 = new ComputerPlayer(Mark.RED);
 	}
-
+	
+	
+	// -- Tests ------------------------------------------------------
+	
 	/*
 	 * When the coverage of this test is tested, it will show a couple of
 	 * branches are missed. But these branches are tested in another part of the

@@ -1,7 +1,5 @@
 package model;
 
-//TODO DONE
-
 /**
  * Abstract class for a player in Connect Four.
  * 

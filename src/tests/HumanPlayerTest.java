@@ -1,23 +1,34 @@
 package tests;
 
-//TODO Check
-
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import model.*;
 import view.StandardInput;
 
+/**
+ * Test for a Human Player.
+ * 
+ * @author Jan-Jaap van Raffe and Wouter Bos
+ * @version 1.0
+ */
 public class HumanPlayerTest {
+	
 	private Board board;
 	private HumanPlayer player1;
-
+	
+	
+	// -- Set up -----------------------------------------------------
+	
 	@Before
 	public void setUp() throws Exception {
 		board = new Board();
 		player1 = new HumanPlayer("Mark", Mark.RED);
 	}
-
+	
+	
+	// -- Tests ------------------------------------------------------
+	
 	/*
 	 * In console, type first a valid move. Then an invalid move, and then the
 	 * valid move you have typed before. Test has to be completed by a person.

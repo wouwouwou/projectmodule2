@@ -1,7 +1,5 @@
 package controller;
 
-//TODO DONE
-
 import model.Board;
 import model.ComputerPlayer;
 import model.HumanPlayer;

@@ -1,7 +1,5 @@
 package controller;
 
-//TODO Check
-
 import model.Board;
 import model.Mark;
 import java.util.Scanner;
@@ -87,7 +85,6 @@ public class GameHandler extends Observable implements Runnable {
 	 * Plays the Connect Four game. First the handlers will send a Game-Start message
 	 * to the clients. Then player one will be asked for a move.
 	 */
-	//@ pure
 	public void run() {
 		clients[0].sendGameStart(clients[0].getClientName(),
 				  clients[1].getClientName());
@@ -105,7 +102,6 @@ public class GameHandler extends Observable implements Runnable {
 	 * @param message
 	 * @return
 	 */
-	//@ pure
 	boolean checkMove(String message) {
 		int choice = determineMove(message);
 		return board.isColumn(choice) && board.containsEmptyColumn(choice);
@@ -118,7 +114,6 @@ public class GameHandler extends Observable implements Runnable {
 	 * @param client
 	 *            name of disconnected client
 	 */
-	//@ pure
 	void disconnect(String client) {
 		if (clients[0].getClientName().equals(client)) {
 			clients[1].sendGameEnd("DISCONNECT", clients[1].getClientName());
@@ -180,7 +175,6 @@ public class GameHandler extends Observable implements Runnable {
 	 * 
 	 * @return the move as integer
 	 */
-	//@ pure
 	int determineMove(String message) {
 		Scanner scan = new Scanner(message);
 		scan.skip("MOVE");

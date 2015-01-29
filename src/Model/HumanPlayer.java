@@ -1,7 +1,5 @@
 package model;
 
-//TODO DONE
-
 import view.StandardInput;
 
 /**
@@ -44,7 +42,6 @@ public class HumanPlayer extends Player {
 	 *            
 	 * @return the player's chosen field
 	 */
-	//@ pure
 	public int determineMove(Board board) {
 		String prompt = "> " + getName() + " (" + getMark().toString() + ")"
 						+ ", what is your choice? ";

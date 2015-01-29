@@ -1,7 +1,5 @@
 package model;
 
-//TODO DONE
-
 /**
  * Class for a Computer Player in Connect Four.
  * 

@@ -1,7 +1,5 @@
 package controller;
 
-//TODO DONE
-
 import java.net.Socket;
 import java.io.*;
 import java.util.*;
@@ -221,7 +219,6 @@ public class ClientHandler implements Observer {
 	/**
 	 * Confirms the connection made. Sends also the supported features.
 	 */
-	//@ pure
 	protected void connectionMade() {
 		String outpackage = "OK ";
 		for (String feature : supportedfeatures) {
@@ -236,7 +233,6 @@ public class ClientHandler implements Observer {
 	/**
 	 * Sends the lobby to the Client.
 	 */
-	//@ pure
 	protected void sendLobby() {
 		String lobby = "LOBBY ";
 		for (ClientHandler client : server.getClients()) {
@@ -256,7 +252,6 @@ public class ClientHandler implements Observer {
 	 * @param message
 	 *            error specification
 	 */
-	//@ pure
 	protected void sendError(String header, String message) {
 		String error = "ERROR " + header + " " + message;
 		server.getView().printString(error);
@@ -276,7 +271,6 @@ public class ClientHandler implements Observer {
 	 * @param height
 	 *            supported height
 	 */
-	//@ pure
 	protected void sendInviteToOpp(String message) {
 		Scanner scan = new Scanner(message);
 		scan.skip("INVITE");
@@ -311,7 +305,6 @@ public class ClientHandler implements Observer {
 	 * @param height
 	 *            heigth of the board the opponent supports
 	 */
-	//@ pure
 	protected void sendInvite(String name, int width, int height) {
 		String invite = "INVITE " + name + " " + width + " " + height;
 		server.getView().printString(invite);
@@ -325,7 +318,6 @@ public class ClientHandler implements Observer {
 	 * @param name
 	 *            opponent's name
 	 */
-	//@ pure
 	protected void sendInvite(String name) {
 		String invite = "INVITE " + name;
 		server.getView().printString(invite);
@@ -373,7 +365,6 @@ public class ClientHandler implements Observer {
 	 * @param arg
 	 *            The argument which the Observable passes through.
 	 */
-	//@ pure
 	public void update(Observable o, Object arg) {
 		if (arg instanceof String) {
 			moveOk((String) arg);
@@ -403,7 +394,6 @@ public class ClientHandler implements Observer {
 	 * @param p2
 	 *            the name of player 2
 	 */
-	//@ pure
 	protected void sendGameStart(String p1, String p2) {
 		if (p1.equals(clientname)) {
 			playernumber = 1;
@@ -426,7 +416,6 @@ public class ClientHandler implements Observer {
 	 * @param winner
 	 *            the winner of the game
 	 */
-	//@ pure
 	protected void sendGameEnd(String type, String winner) {
 		String end = "END " + type + " " + winner;
 		server.getView().printString(end);
@@ -438,7 +427,6 @@ public class ClientHandler implements Observer {
 	/**
 	 * Requests a move from the client.
 	 */
-	//@ pure
 	protected void requestMove() {
 		server.getView().printString("REQUEST");
 		out.println("REQUEST");
@@ -478,7 +466,6 @@ public class ClientHandler implements Observer {
 	 * @param message
 	 *            the command for a confirmed move
 	 */
-	//@ pure
 	protected void moveOk(String message) {
 		server.getView().printString(message);
 		out.println(message);
@@ -492,7 +479,6 @@ public class ClientHandler implements Observer {
 	 * @param message
 	 *            the error message given by the client
 	 */
-	//@ pure
 	protected void printError(String message) {
 		server.getView().printString(message);
 	}

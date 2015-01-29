@@ -1,7 +1,5 @@
 package model;
 
-//TODO DONE
-
 /**
  * Board class for the game Connect Four.
  * 

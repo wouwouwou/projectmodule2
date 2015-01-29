@@ -1,7 +1,5 @@
 package controller;
 
-//TODO DONE
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -226,7 +224,6 @@ public class Client extends Thread {
 	 * response is right, the view will print that the connection is successful.
 	 * Otherwise catches IOException or / and prints an error.
 	 */
-	//@ pure
 	private void confirmConnection() {
 		out.println("CONNECT " + getClientName());
 		out.flush();
@@ -254,7 +251,6 @@ public class Client extends Thread {
 	 * Of course this method won't invite this client, because
 	 * it would be stupid to invite yourself...
 	 */
-	//@ pure
 	private void sendInvites() {
 		Scanner scan = new Scanner(currentlobby);
 		while (scan.hasNext()) {
@@ -285,7 +281,6 @@ public class Client extends Thread {
 	 * @param message
 	 *            the incoming invite message
 	 */
-	//@ pure
 	void acceptInvite(String invite) {
 		Scanner scan = new Scanner(invite);
 		scan.skip("INVITE");
@@ -386,7 +381,6 @@ public class Client extends Thread {
 	 * @param error
 	 *            The error message from the Server.
 	 */
-	//@ pure
 	void printError(String error) {
 		clientview.printString(error);
 	}
@@ -399,7 +393,6 @@ public class Client extends Thread {
 	 * @param opp
 	 *            the name of the opponent
 	 */
-	//@ pure
 	private void sendInvite(String opp) {
 		int width = Board.WIDTH;
 		int height = Board.HEIGHT;
@@ -410,7 +403,6 @@ public class Client extends Thread {
 	/**
 	 * Determines the move and sends it to the server.
 	 */
-	//@ pure
 	void sendMove() {
 		Player computerplayer = new ComputerPlayer(player.getMark());
 		int hint = computerplayer.determineMove(getBoard());
@@ -487,7 +479,6 @@ public class Client extends Thread {
 	/**
 	 * Asks the server for the lobby.
 	 */
-	//@ pure
 	private void requestLobby() {
 		out.println("LOBBY");
 		out.flush();

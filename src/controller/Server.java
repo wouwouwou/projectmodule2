@@ -1,7 +1,5 @@
 package controller;
 
-//TODO DONE
-
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.net.InetAddress;
@@ -178,7 +176,6 @@ public class Server extends Thread {
 	 * 
 	 * @return ServerSocket if succeeded. Else null.
 	 */
-	//@ pure
 	private ServerSocket setupServerSocket() {
 		ServerSocket res = null;
 		try {

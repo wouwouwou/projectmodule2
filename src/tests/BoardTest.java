@@ -1,22 +1,27 @@
 package tests;
 
-//TODO Check
-
 import static org.junit.Assert.*;
 import org.junit.*;
 import model.*;
 
 public class BoardTest {
+	
 	private Board board;
-
+	
+	
+	// -- Set up -----------------------------------------------------
+	
 	/*
 	 * Sets the board to an empty board.
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		board = new Board();
 	}
-
+	
+	
+	// -- Tests ------------------------------------------------------
+	
 	/*
 	 * Tests whether the board is really empty.
 	 */

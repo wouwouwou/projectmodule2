@@ -1,7 +1,5 @@
 package model;
 
-//TODO DONE
-
 /**
  * Interface for a Strategy of a Computer Player.
  * 
