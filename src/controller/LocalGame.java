@@ -1,5 +1,7 @@
 package controller;
 
+//TODO DONE
+
 import model.Board;
 import model.ComputerPlayer;
 import model.HumanPlayer;
@@ -14,60 +16,66 @@ import view.LocalView;
  * @author Jan-Jaap van Raffe and Wouter Bos
  * @version v1.0
  */
-
 public class LocalGame implements Runnable {
 
+	
 	// -- Instance variables -----------------------------------------
+	
+	//@ private invariant NUMBER_PLAYERS == 2;
+	private static final int NUMBER_PLAYERS = 2;
 
-	public static final int NUMBER_PLAYERS = 2;
-
-	/*
-	 * @ private invariant board != null;
-	 */
+	//@ private invariant board != null;
 	/**
 	 * The board.
 	 */
 	private Board board;
 
-	/*
-	 * @ private invariant players.length == NUMBER_PLAYERS; private invariant
-	 * (\forall int i; 0 <= i && i < NUMBER_PLAYERS; players[i] != null);
+	/*@ private invariant players.length == NUMBER_PLAYERS; private invariant
+		(\forall int i; 0 <= i && i < NUMBER_PLAYERS; players[i] != null);
 	 */
 	/**
 	 * The 2 players of the game.
 	 */
 	private Player[] players;
 
-	/*
-	 * @ private invariant 0 <= current && current < NUMBER_PLAYERS;
-	 */
+	//@ private invariant 0 <= current && current < NUMBER_PLAYERS;
 	/**
 	 * Index of the current player.
 	 */
 	private int current;
-
+	
+	
 	// -- Constructors -----------------------------------------------
-
+	
 	/**
 	 * Creates a new LocalGame object.
 	 */
 	public LocalGame() {
 		board = new Board();
 		players = new Player[NUMBER_PLAYERS];
+		getPlayers();
 		current = 0;
 	}
-
+	
+	
 	// -- Commands ---------------------------------------------------
-
+	
 	/**
-	 * Gets the players and starts a game.
+	 * Runs the Connect Four game. <br>
+	 * Asks after each ended game if the user wants to continue. Continues until
+	 * the user doesn't want to play anymore.
 	 */
 	public void run() {
-		getPlayers();
-		startGame();
+		boolean doorgaan = true;
+		while (doorgaan) {
+			reset();
+			play();
+			doorgaan = StandardInput.readBoolean(
+					"\n> Play another time? (y/n)?", "y", "n");
+		}
 	}
-
-	// TODO JML
+	
+	//@ ensures (\forall int i; 0 <= i && i < NUMBER_PLAYERS; players[i] != null);
 	/**
 	 * Gets the players.
 	 */
@@ -78,7 +86,6 @@ public class LocalGame implements Runnable {
 			case "-N":
 				players[0] = new ComputerPlayer(Mark.RED);
 				break;
-		// case "-S": players[0] = new ComputerPlayer(Mark.RED);
 			default:
 				players[0] = new HumanPlayer(args[0], Mark.RED);
 
@@ -86,28 +93,12 @@ public class LocalGame implements Runnable {
 		switch (args[1]) {
 			case "-N":
 				players[1] = new ComputerPlayer(Mark.BLU);
-			// case "-S": players[1] = new ComputerPlayer(Mark.BLU);
 				break;
 			default:
 				players[1] = new HumanPlayer(args[1], Mark.BLU);
 		}
 	}
-
-	/**
-	 * Starts the Connect Four game. <br>
-	 * Asks after each ended game if the user wants to continue. Continues until
-	 * the user doesn't want to play anymore.
-	 */
-	public void startGame() {
-		boolean doorgaan = true;
-		while (doorgaan) {
-			reset();
-			play();
-			doorgaan = StandardInput.readBoolean(
-					"\n> Play another time? (y/n)?", "y", "n");
-		}
-	}
-
+	
 	/**
 	 * Resets the game. <br>
 	 * The board is emptied and player[0] becomes the current player.
@@ -129,13 +120,11 @@ public class LocalGame implements Runnable {
 			players[current].makeMove(board);
 			LocalView.showBoard(board);
 			current = (current + 1) % 2;
-		} while (!board.hasWinner() && !board.isFull());
-		this.printResult();
+		} while (!board.gameOver());
+		printResult();
 	}
 
-	/*
-	 * @ requires this.board.gameOver();
-	 */
+	//@ requires board.gameOver();
 	/**
 	 * Prints the result of the last game. <br>
 	 */

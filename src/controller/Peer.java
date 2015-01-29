@@ -1,5 +1,7 @@
 package controller;
 
+//TODO Check
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -28,10 +30,15 @@ public class Peer implements Runnable {
 	 *            the socket of the ClientHandler
 	 */
 
-	public Peer(ClientHandler clienthandler) throws IOException {
+	public Peer(ClientHandler clienthandler) {
 		handler = clienthandler;
-		in = new BufferedReader(new InputStreamReader(handler.getSocket()
+		try {
+			in = new BufferedReader(new InputStreamReader(handler.getSocket()
 				.getInputStream()));
+		} catch (IOException e) {
+			System.out.println("Error when constructing a peer. " + e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -43,19 +50,25 @@ public class Peer implements Runnable {
 	 * @param sock
 	 *            the socket of the Client
 	 */
-	public Peer(Client cli) throws IOException {
+	public Peer(Client cli) {
 		client = cli;
-		in = new BufferedReader(new InputStreamReader(client.getSocket()
+		try {
+			in = new BufferedReader(new InputStreamReader(client.getSocket()
 				.getInputStream()));
+		} catch (IOException e) {
+			System.out.println("Error when constructing a peer. " + e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
 	private void listenClient() {
-		while (true) {
+		boolean doorgaan = true;
+		while (doorgaan) {
 			String message = null;
 			try {
 				message = in.readLine();
 			} catch (IOException e) {
-				client.serverShutDown();
+				client.shutDown();
 			}
 			if (message == null) {
 				break;
@@ -81,6 +94,9 @@ public class Peer implements Runnable {
 				case "END":
 					client.gameEnd(message);
 					break;
+				case "QUIT":
+					doorgaan = false;
+					break;
 				case "ERROR":
 					client.printError(message);
 					break;
@@ -90,13 +106,14 @@ public class Peer implements Runnable {
 	}
 
 	private void listenHandler() {
-		while (true) {
+		boolean doorgaan = true;
+		while (doorgaan) {
 			String message = null;
 			try {
 				message = in.readLine();
 				ServerView.printMessage(message);
 			} catch (IOException e) {
-				handler.shutDown();
+				handler.clientShutDown();
 			}
 			if (message == null) {
 				break;
@@ -123,7 +140,8 @@ public class Peer implements Runnable {
 					handler.printError(message);
 					break;
 				case "QUIT":
-					handler.shutDown();
+					doorgaan = false;
+					handler.clientShutDown();
 					break;
 				default:
 					handler.sendError("InvalidCommand", "Your Command is invalid!");
@@ -138,6 +156,12 @@ public class Peer implements Runnable {
 		}
 		if (handler != null) {
 			listenHandler();
+		}
+		try {
+			in.close();
+		} catch (IOException e) {
+			System.out.println("Error when stopping the Peer: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 }

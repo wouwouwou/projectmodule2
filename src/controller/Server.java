@@ -1,5 +1,7 @@
 package controller;
 
+//TODO Check
+
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.net.InetAddress;
@@ -17,7 +19,6 @@ import view.StandardInput;
  * @version v1.0
  * 
  */
-
 public class Server extends Thread {
 
 	private List<ClientHandler> clients = new ArrayList<ClientHandler>();

@@ -1,5 +1,7 @@
 package model;
 
+//TODO DONE
+
 /**
  * Class for a Computer Player in Connect Four.
  * 
@@ -8,15 +10,21 @@ package model;
  */
 public class ComputerPlayer extends Player {
 
+	
 	// -- Instance variables -----------------------------------------
-
+	
+	//@ private invariant strategy != null;
 	/**
 	 * The strategy of the Computer Player.
 	 */
 	private Strategy strategy;
 
+	
 	// -- Constructors -----------------------------------------------
-
+	
+	/*@ requires mark == Mark.RED || mark == Mark.BLU;
+	 	ensures getName() != null && getMark() == mark;
+	 */
 	/**
 	 * Creates a Computer Player with a Naive Strategy.
 	 * 
@@ -28,19 +36,29 @@ public class ComputerPlayer extends Player {
 		strategy = new NaiveStrategy();
 	}
 
-	//TODO Watch this!
-	/*
-	 * Temporarily commented out because of minimal requirements!
+	
+	// -- Queries ----------------------------------------------------
+	
+	/**
+	 * Returns the strategy of this Computer Player.
 	 * 
-	 * ComputerPlayer(Mark mark, Strategy strategy) { super(strategy.getName(),
-	 * mark); this.strategy = strategy; }
+	 * @return strategy of the Computer Player
 	 */
-
+	//@ pure
+	public Strategy getStrategy() {
+		return strategy;
+	}
+	
+	/*@ requires board != null && !board.gameOver() && getMark() != null;
+	 	ensures \result == getStrategy().determineMove(board, getMark()) &&
+	 	board.isEmptyField(\result) && board.isField(\result);
+	 */
 	/**
 	 * Determines the move the Computer Player has to make. Overrides the method
 	 * in the abstract Player class.
 	 */
 	@Override
+	//@ pure
 	public int determineMove(Board board) {
 		return strategy.determineMove(board, this.getMark());
 	}

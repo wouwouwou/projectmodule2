@@ -1,5 +1,7 @@
 package model;
 
+//TODO DONE
+
 import java.util.Set;
 import java.util.HashSet;
 
@@ -10,29 +12,43 @@ import java.util.HashSet;
  * @version 1.0
  */
 public class NaiveStrategy implements Strategy {
-
+	
+	
+	// -- Instance variables -----------------------------------------
+	
+	//@ private invariant name != null;
 	/**
 	 * The name of the Strategy.
 	 */
 	private String name = "Naive computer -";
-
+	
+	
+	// -- Queries ----------------------------------------------------
+	
+	//@ ensures \result != null;
 	/**
 	 * Returns the name of the Strategy.
 	 */
 	@Override
+	//@ pure
 	public String getName() {
-		return this.name;
+		return name;
 	}
-
+	
+	/*@	requires board != null && !board.isFull();
+ 		requires mark == Mark.RED || mark == Mark.BLU;
+ 		ensures board.isField(\result) && board.isEmptyField(\result);
+	 */
 	/**
 	 * Determines and returns the move for the Computer Player.
 	 */
 	@Override
-	public int determineMove(Board b, Mark m) {
+	//@ pure
+	public int determineMove(Board board, Mark mark) {
 		Set<Integer> emptyColumns = new HashSet<Integer>();
 		int i = 0;
-		while (b.isColumn(i)) {
-			if (b.containsEmptyColumn(i)) {
+		while (board.isColumn(i)) {
+			if (board.containsEmptyColumn(i)) {
 				emptyColumns.add(i);
 			}
 			i = i + 1;

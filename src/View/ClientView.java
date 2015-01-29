@@ -1,8 +1,10 @@
 package view;
 
-import java.util.Scanner;
+//TODO Check and implement chat feature
 
-import model.*;
+import java.util.Scanner;
+import controller.Client;
+import model.Board;
 
 /**
  * View for playing the game in Multiplayer mode.
@@ -11,7 +13,13 @@ import model.*;
  * @version v1.0
  */
 public class ClientView extends Thread {
-
+	
+	private Client client;
+	
+	public ClientView (Client cli) {
+		client = cli;
+	}
+	
 	public static String getClientName() {
 		return StandardInput.getString("\n> What's your name? \n");
 	}
@@ -90,5 +98,8 @@ public class ClientView extends Thread {
 		System.out
 				.println("\nYou succesfully made a connection with the server!\n");
 	}
-
+	
+	public void run() {
+		
+	}
 }

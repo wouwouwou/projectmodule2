@@ -1,5 +1,7 @@
 package view;
 
+//TODO Check
+
 import java.util.*;
 import controller.ClientHandler;
 import controller.Server;
@@ -67,10 +69,9 @@ public class ServerView extends Thread {
 			set.add(client);
 		}
 		for (ClientHandler handler : set) {
-			handler.shutDown();
+			handler.serverShutDown();
 		}
 		System.out.println("\nServer disconnected.");
-		
 		System.exit(0);
 	}
 }

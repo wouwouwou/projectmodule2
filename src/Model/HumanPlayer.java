@@ -1,5 +1,7 @@
 package model;
 
+//TODO DONE
+
 import view.StandardInput;
 
 /**
@@ -12,9 +14,8 @@ public class HumanPlayer extends Player {
 
 	// -- Constructors -----------------------------------------------
 
-	/*
-	 * @ requires name != null; requires mark == Mark.RED || mark == Mark.BLU;
-	 * ensures this.getName() == name; ensures this.getMark() == mark;
+	/*@ requires name != null && (mark == Mark.RED || mark == Mark.BLU);
+	  	ensures getName() == name; ensures getMark() == mark;
 	 */
 	/**
 	 * Creates a new Human Player.
@@ -31,9 +32,8 @@ public class HumanPlayer extends Player {
 
 	// -- Commands ---------------------------------------------------
 
-	/*
-	 * @ requires board != null; ensures board.isField(\result) &&
-	 * board.isEmptyField(\result);
+	/*@ requires board != null && !board.gameOver() && getMark() != null;
+	 	ensures board.isField(\result) && board.isEmptyField(\result);
 	 */
 	/**
 	 * Asks the user to input the field where to place the next mark. This is
@@ -41,9 +41,10 @@ public class HumanPlayer extends Player {
 	 * 
 	 * @param board
 	 *            the game board
+	 *            
 	 * @return the player's chosen field
 	 */
-	/* @pure */
+	//@ pure
 	public int determineMove(Board board) {
 		String prompt = "> " + getName() + " (" + getMark().toString() + ")"
 						+ ", what is your choice? ";

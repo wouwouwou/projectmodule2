@@ -1,5 +1,7 @@
 package controller;
 
+//TODO Check, also make a method in the server class to get the serverview. Then implement the shit.
+
 import java.net.Socket;
 import java.io.*;
 import java.util.*;
@@ -20,7 +22,7 @@ public class ClientHandler extends Thread implements Observer {
 	private PrintStream out;
 	private String clientname;
 	private List<String> supportedfeatures = new ArrayList<String>();
-	private Peer peer;
+	private Thread peer;
 	private GameHandler game;
 	private int playernumber;
 
@@ -34,8 +36,17 @@ public class ClientHandler extends Thread implements Observer {
 	 *            communication line with the client
 	 */
 	public ClientHandler(Server serv, Socket sock) {
-		this.server = serv;
-		this.socket = sock;
+		server = serv;
+		socket = sock;
+		try {
+			Peer peertje = new Peer(this);
+			peer = new Thread(peertje);
+			peer.start();
+			out = new PrintStream(socket.getOutputStream());
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -79,7 +90,6 @@ public class ClientHandler extends Thread implements Observer {
 				}
 			}
 			clientname = name;
-			this.setName(clientname + "-handler");
 			String feature = "";
 			while (scan.hasNext()) {
 				feature = scan.next();
@@ -91,14 +101,7 @@ public class ClientHandler extends Thread implements Observer {
 			connectionMade();
 		} catch (IOException e) {
 			sendError("ConnectionFailure: ", e.getMessage());
-			try {
-				peer.in.close();
-			} catch (IOException e2) {
-				System.out.println("Exception when closing ClientHandler input. " + e.getMessage());
-				e2.printStackTrace();
-			}
-			out.close();
-			this.interrupt();
+			clientShutDown();
 		}
 	}
 
@@ -309,21 +312,30 @@ public class ClientHandler extends Thread implements Observer {
 	protected void printError(String message) {
 		ServerView.printError(message);
 	}
-
-	public void shutDown() {
+	
+	public void serverShutDown() {
+		if (game != null) {
+			game.disconnect(clientname);
+		}
+		if (clientname != null) {
+			out.close();
+			server.removeClient(clientname);
+		} else {
+			server.removeClient(null);
+		}
+		this.interrupt();
+	}
+	
+	public void clientShutDown() {
 		if (game != null) {
 			game.disconnect(clientname);
 		}
 		if (clientname != null) {
 			ServerView.clientDisconnected(clientname);
-			try {
-				peer.in.close();
-			} catch (IOException e) {
-				System.out.println("Exception when closing ClientHandler input. " + e.getMessage());
-				e.printStackTrace();
-			}
 			out.close();
 			server.removeClient(clientname);
+		} else {
+			server.removeClient(null);
 		}
 		this.interrupt();
 	}
@@ -334,15 +346,6 @@ public class ClientHandler extends Thread implements Observer {
 	 * Client.
 	 */
 	public void run() {
-		try {
-			peer = new Peer(this);
-			Thread peerthread = new Thread(peer);
-			peerthread.setName(this.getName() + "-peer");
-			peerthread.start();
-			out = new PrintStream(socket.getOutputStream());
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		}
+		
 	}
 }

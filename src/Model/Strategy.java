@@ -1,5 +1,7 @@
 package model;
 
+//TODO DONE
+
 /**
  * Interface for a Strategy of a Computer Player.
  * 
@@ -7,24 +9,36 @@ package model;
  * @version 1.0
  */
 public interface Strategy {
-
+	
+	
+	// -- Queries ----------------------------------------------------
+	
+	//@ ensures \result != null;
 	/**
 	 * Gets the name of the Strategy.
 	 * 
 	 * @return Strategy name.
 	 */
+	//@ pure
 	public String getName();
-
+	
+	/*@	requires board != null && !board.isFull();
+	 	requires mark == Mark.RED || mark == Mark.BLU;
+	 	ensures board.isField(\result) && board.isEmptyField(\result);
+	 */
 	/**
 	 * Determines the move for the Computer Player. Needs the board and the mark
 	 * to determine the move.
 	 * 
-	 * @param b
+	 * @param board
 	 *            the board
-	 * @param m
+	 *            
+	 * @param mark
 	 *            the mark
+	 *            
 	 * @return the field
 	 */
-	public int determineMove(Board b, Mark m);
+	//@ pure
+	public int determineMove(Board board, Mark mark);
 
 }

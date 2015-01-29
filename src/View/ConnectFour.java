@@ -1,5 +1,7 @@
 package view;
 
+//TODO DONE
+
 import controller.Server;
 import controller.Client;
 import controller.LocalGame;
@@ -11,11 +13,10 @@ import controller.LocalGame;
  * @version v1.0
  *
  */
-
 public class ConnectFour {
 
 	/**
-	 * Starts the LocalGame Controller.
+	 * Starts a local game. Has to run the LocalGame class.
 	 */
 	public static void playLocal() {
 		Runnable play = new LocalGame();
@@ -23,22 +24,22 @@ public class ConnectFour {
 	}
 
 	/**
-	 * Starts a Client.
+	 * Starts a Client to play a multiplayer game.
 	 */
 	private static void playMulti() {
-		Thread client = new Client();
-		client.start();
+		Client client = new Client();
+		Thread t = new Thread(client);
+		t.start();
 	}
 
 	/**
-	 * Lets the user choose if he / she wants to play a local game or wants to
-	 * play in multiplayer mode.
+	 * Lets the user choose if he / she wants to play a local game or a multiplayer game.
 	 */
 	private static void playGame() {
 		String playmode = StandardInput
 						.readChoice(
-						"\n> Do you want to play in local-mode or "
-						+ "in multiplayer-mode? (local/multi)? \n",
+						"\n> Do you want to play a local or "
+						+ "a multiplayer game? (local/multi)? \n",
 						"local", "multi");
 		if (playmode.equals("local")) {
 			playLocal();
@@ -56,7 +57,7 @@ public class ConnectFour {
 	}
 
 	/**
-	 * Let's the user choose if he / she wants to play or to start a server.
+	 * Let's the user choose if he / she wants to play or wants to start a server.
 	 * 
 	 * @param args
 	 *            starting arguments for this program. Nothing is done with it.

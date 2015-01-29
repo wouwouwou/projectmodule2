@@ -1,6 +1,6 @@
 package controller;
 
-//TODO JML
+//TODO Check, also make a clientview field and implement this.
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,29 +26,40 @@ import view.StandardInput;
  * @version v1.0
  */
 public class Client extends Thread {
-
+	
+	
 	// -- Instance variables -----------------------------------------
-
+	
+	//@ private invariant sock != null;
 	/**
 	 * The socket of this Client.
 	 */
 	private Socket sock;
-
+	
+	//@ private invariant clientname != null;
 	/**
 	 * The name of the Client.
 	 */
 	private String clientname;
-
+	
+	//@ private invariant out != null;
 	/**
 	 * PrintStream for writing messages to the Server.
 	 */
 	private PrintStream out;
-
+	
+	//@ private invariant peer != null;
 	/**
-	 * Peer for all incoming messages from the Server.
+	 * Peer thread for all incoming messages from the Server.
 	 */
-	private Peer peer;
-
+	private Thread peer;
+	
+	//@ private invariant clientview != null;
+	/**
+	 * Thread for the ClientView.
+	 */
+	private Thread clientview;
+	
 	/**
 	 * Field for keeping the most current version of the Server lobby.
 	 */
@@ -60,7 +71,7 @@ public class Client extends Thread {
 	private Board board;
 
 	/**
-	 * Player for knowing if the client is a human player of a computer player.
+	 * Player for knowing if the client plays as a human player of a computer player.
 	 */
 	private Player player;
 
@@ -68,23 +79,92 @@ public class Client extends Thread {
 	 * Boolean for tracking the ingame status of the client.
 	 */
 	private boolean ingame;
-
+	
+	
+	// -- Constructors -----------------------------------------------
+	
+	/*@ ensures getClientName() != null && getOutput() != null &&
+	 	getSocket() != null && getPeer() != null;
+	 */
+	/**
+	 * Creates a new Client. Also sets up all communication with the server and
+	 * asks if the client wants to send invites to everyone in the lobby. If
+	 * yes, sends them. If no, waits for a suitable invite for a game.
+	 */
+	public Client() {
+		clientname = ClientView.getClientName();
+		ClientView view = new ClientView(this);
+		clientview = new Thread(view);
+		clientview.start();
+		try {
+			sock = new Socket(InetAddress.getByName(ClientView.getIP()),
+					ClientView.getPort());
+		} catch (UnknownHostException e) {
+			ClientView.printError("\nFailed to connect to a server. (wrong IP) "
+								+ "Try running this program again.");
+			System.exit(0);
+		} catch (IOException e) {
+			ClientView.printError("\nFailed to connect to a server. (wrong port)"
+								+ "Try running this program again.");
+			System.exit(0);
+		}
+		outputSetup();
+		confirmConnection();
+		peerSetup();
+		requestLobby();
+	}
+	
+	
 	// -- Queries ----------------------------------------------------
+	
 	/**
 	 * Gets the socket of this Client.
 	 * 
 	 * @return the socket of the client.
 	 */
-	Socket getSocket() {
+	//@ pure
+	public Socket getSocket() {
 		return sock;
 	}
-
-	// -- Commands ---------------------------------------------------
+	
 	/**
-	 * Sets up the input and the output from / to the socket. The input is
-	 * temporary. Later on there will be a Peer handling it.
+	 * Gets the output of this Client's socket.
+	 * 
+	 * @return the socket of the client.
 	 */
-	private void communicationSetup() {
+	//@ pure
+	public PrintStream getOutput() {
+		return out;
+	}
+	
+	/**
+	 * Gets the name of this Client.
+	 * 
+	 * @return the socket of the client.
+	 */
+	//@ pure
+	public String getClientName() {
+		return clientname;
+	}
+	
+	/**
+	 * Gets the peer thread of this Client.
+	 * 
+	 * @return the socket of the client.
+	 */
+	//@ pure
+	public Thread getPeer() {
+		return peer;
+	}
+	
+	
+	// -- Commands ---------------------------------------------------
+	
+	//@ ensures out != null;
+	/**
+	 * Sets up the output to the socket.
+	 */
+	private void outputSetup() {
 		try {
 			out = new PrintStream(sock.getOutputStream());
 		} catch (IOException e) {
@@ -94,18 +174,23 @@ public class Client extends Thread {
 	}
 
 	/**
-	 * Sends our name to the server for connection. Awaits a repsonse. If the
-	 * response is right, the view will print that the connection is succesfull.
-	 * Otherwise IOException or Error.
-	 * 
-	 * @throws IOException
+	 * Sends our name to the server for connection. Awaits a response. If the
+	 * response is right, the view will print that the connection is successful.
+	 * Otherwise catches IOException or / and prints an error.
 	 */
-	private void connectionSetup() throws IOException {
+	//@ pure
+	private void confirmConnection() {
 		out.println("CONNECT " + clientname);
 		out.flush();
-		BufferedReader in = new BufferedReader(new InputStreamReader(
-				  sock.getInputStream()));
-		String message = in.readLine();
+		String message = "";
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+							sock.getInputStream()));
+			message = in.readLine();
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
 		if (message.startsWith("OK")) {
 			ClientView.connected();
 		} else {
@@ -114,14 +199,13 @@ public class Client extends Thread {
 			ClientView.printError("\nError when connecting to the server. Received message: \n"
 							+ message + "\n");
 		}
-	}
+	} 
 	
 	/**
 	 * Sends invites to everyone who is connected, except ourself.
-	 * 
-	 * @throws IOException
 	 */
-	private void sendInvites() throws IOException {
+	//@ pure
+	private void sendInvites() {
 		Scanner scan = new Scanner(currentlobby);
 		while (scan.hasNext()) {
 			String lobbyname = scan.next();
@@ -134,16 +218,12 @@ public class Client extends Thread {
 	}
 
 	/**
-	 * Setsup a peer for incoming messages. Can throw an IOException when
-	 * constructing the peer.
-	 * 
-	 * @throws IOException
+	 * Setsup a peer for incoming messages.
 	 */
-	private void peerSetup() throws IOException {
-		peer = new Peer(this);
-		Thread peerthread = new Thread(peer);
-		peerthread.setName(clientname + "-peer");
-		peerthread.start();
+	private void peerSetup() {
+		Peer peertje = new Peer(this);
+		peer = new Thread(peertje);
+		peer.start();
 	}
 
 	/**
@@ -225,20 +305,15 @@ public class Client extends Thread {
 		}
 		scan.close();
 		ClientView.printLobby(currentlobby);
-		try {
-			boolean sendInvite = StandardInput
-							.readBoolean(
-							"> Do you want to send invites in everyone in the lobby (y/n)?\n",
-							"y", "n");
-			if (sendInvite) {
-				sendInvites();
-			} else {
-				ClientView
-				.printMessage("\nWaiting for an arbitrary but suitable invite.");
-			}
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+		boolean sendInvite = StandardInput
+						.readBoolean(
+						"> Do you want to send invites in everyone in the lobby (y/n)?\n",
+						"y", "n");
+		if (sendInvite) {
+			sendInvites();
+		} else {
+			ClientView
+			.printMessage("\nWaiting for an arbitrary but suitable invite.");
 		}
 	}
 
@@ -320,7 +395,7 @@ public class Client extends Thread {
 						+ "play another multiplayer game (y/n)?", "y", "n");
 		if (nextmultigame) {
 			requestLobby();
-			board.reset();
+			board = null;
 			player = null;
 			ingame = false;
 		} else {
@@ -329,17 +404,11 @@ public class Client extends Thread {
 	}
 
 	/**
-	 * Handles a server shutdown. Shows a message and terminates the program.
+	 * Handles shutdown. Shows a message and terminates the program.
 	 */
-	void serverShutDown() {
-		ClientView.serverDisconnected();
-		try {
-			peer.in.close();
-		} catch (IOException e) {
-			System.out.println("Exception when closing the input"
-							 + "at the Client Peer. " + e.getMessage());
-			e.printStackTrace();
-		}
+	void shutDown() {
+		out.println("QUIT");
+		out.flush();
 		out.close();
 		System.exit(0);
 	}
@@ -353,36 +422,16 @@ public class Client extends Thread {
 	}
 
 	/**
-	 * Sets up all communication with the server and asks if the client wants to
-	 * send invites to everyone in the lobby. If yes, sends them. If no, waits
-	 * for a suitable invite for a game.
+	 * Waits for the peer to end.
 	 */
 	public void run() {
 		try {
-			clientname = ClientView.getClientName();
-			this.setName(clientname);
-			try {
-				sock = new Socket(InetAddress.getByName(ClientView.getIP()),
-						ClientView.getPort());
-			} catch (IOException e) {
-				ClientView.printError("\nFailed to connect to a server. "
-								+ "Try running this program again.");
-				System.exit(0);
-			} catch (IllegalArgumentException e) {
-				ClientView.printError("\nYou probably inserted a wrong portnumber. "
-								+ "Try running this program again.");
-				System.exit(0);
-			}
-			communicationSetup();
-			connectionSetup();
-			peerSetup();
-			requestLobby();
-		} catch (UnknownHostException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
+			peer.join();
+		} catch (InterruptedException e) {
+			System.out.println("Error when joining the peer-thread." + e.getMessage());
 			e.printStackTrace();
 		}
+		ClientView.serverDisconnected();
+		shutDown();
 	}
 }
