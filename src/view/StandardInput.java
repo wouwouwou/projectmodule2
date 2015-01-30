@@ -39,7 +39,6 @@ public class StandardInput {
 			in = new Scanner(System.in);
 			answer = in.hasNextLine() ? in.nextLine() : null;
 		} while (answer == null || (!answer.equals(yes) && !answer.equals(no)));
-		in.close();
 		return answer.equals(yes);
 	}
 	
@@ -74,7 +73,6 @@ public class StandardInput {
 			answer = in.hasNextLine() ? in.nextLine() : null;
 		} while (answer == null
 				|| (!answer.equals(option1) && !answer.equals(option2)));
-		in.close();
 		return answer;
 	}
 
@@ -101,8 +99,6 @@ public class StandardInput {
 				value = scannerline.nextInt();
 			}
 		} while (!intRead);
-		in.close();
-		scannerline.close();
 		return value;
 	}
 	
@@ -127,7 +123,6 @@ public class StandardInput {
 			in = new Scanner(System.in);
 			res = in.hasNextLine() ? in.nextLine() : null;
 		} while (res.equals("") || res == null);
-		in.close();
 		return res;
 	}
 

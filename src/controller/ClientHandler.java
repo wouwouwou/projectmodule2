@@ -183,6 +183,9 @@ public class ClientHandler implements Observer {
 	 * Gets the name from the client's message. Also gets the features and
 	 * compares them with the features of the server. Remembers if there are
 	 * corresponding features.
+	 * 
+	 * @param message
+	 *            The CONNECT message received from the Client
 	 */
 	protected void connectClient(String message) {
 		try {
@@ -260,16 +263,10 @@ public class ClientHandler implements Observer {
 	}
 
 	/**
-	 * Sends an invite to the opponent.
+	 * Sends an invite from the client to the opponent.
 	 * 
-	 * @param name
-	 *            Client's own name
-	 * 
-	 * @param width
-	 *            supported width
-	 * 
-	 * @param height
-	 *            supported height
+	 * @param message
+	 *            The Invite message from the client
 	 */
 	protected void sendInviteToOpp(String message) {
 		Scanner scan = new Scanner(message);

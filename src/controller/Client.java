@@ -278,7 +278,7 @@ public class Client extends Thread {
 	 * Accepts every invite which comes in through the Peer, if the invite is
 	 * suitable and the Client isn't in game. Otherwise declines the invite.
 	 * 
-	 * @param message
+	 * @param invite
 	 *            the incoming invite message
 	 */
 	void acceptInvite(String invite) {
