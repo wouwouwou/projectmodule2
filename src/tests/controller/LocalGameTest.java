@@ -1,7 +1,7 @@
 package tests.controller;
 
 import static org.junit.Assert.*;
-
+import controller.LocalGame;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,10 +13,13 @@ import org.junit.Test;
  */
 public class LocalGameTest {
 	
+	private LocalGame game;
+	
 	// -- Set up -----------------------------------------------------
 	
 	@Before
 	public void setUp() throws Exception {
+		game = new LocalGame();
 	}
 	
 	
@@ -24,7 +27,7 @@ public class LocalGameTest {
 	
 	@Test
 	public void test() {
-		fail("Not yet implemented");
+		game.run();
 	}
 
 }

@@ -33,11 +33,11 @@ public class Server extends Thread {
 	 */
 	private List<String> features;
 	
-	//@ private invariant clientview != null;
+	//@ private invariant serverview != null;
 	/**
 	 * The view of this server.
 	 */
-	private ServerView clientview;
+	private ServerView serverview;
 	
 	//@ private invariant ssock != null;
 	/**
@@ -65,7 +65,7 @@ public class Server extends Thread {
 				addFeature(feature);
 			}
 		}
-		clientview = new ServerView(this);
+		serverview = new ServerView(this);
 		while (ssock == null) {
 			ssock = setupServerSocket();
 		}
@@ -101,7 +101,7 @@ public class Server extends Thread {
 	 */
 	//@ pure
 	public ServerView getView() {
-		return clientview;
+		return serverview;
 	}
 	
 	/**
@@ -123,7 +123,7 @@ public class Server extends Thread {
 		for (ClientHandler client : clients) {
 			lobby = lobby + " " + client.getClientName();
 		}
-		clientview.showClients(lobby);
+		serverview.showClients(lobby);
 	}
 	
 	
@@ -183,7 +183,7 @@ public class Server extends Thread {
 					StandardInput
 							.readInt("\n> Insert the port number you want to use \n"));
 		} catch (IOException e) {
-			clientview.printString("\nThis portnumber is already in use!");
+			serverview.printString("\nThis portnumber is already in use!");
 		}
 		return res;
 	}
@@ -195,9 +195,9 @@ public class Server extends Thread {
 	 */
 	public void run() {
 		try {
-			Thread serverview = new Thread(clientview);
-			serverview.start();
-			clientview.isActive(InetAddress.getLocalHost().getHostAddress(),
+			Thread t = new Thread(serverview);
+			t.start();
+			serverview.isActive(InetAddress.getLocalHost().getHostAddress(),
 					  ssock.getLocalPort());
 			while (true) {
 				Socket sock = ssock.accept();

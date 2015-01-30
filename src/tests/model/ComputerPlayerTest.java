@@ -64,6 +64,8 @@ public class ComputerPlayerTest {
 		assertTrue(board.isFull());
 		Strategy strat = player1.getStrategy();
 		assertNotNull(strat);
+		assertEquals(player1.getMark(), Mark.RED);
+		assertEquals(player1.getName(), "Naive computer -");
 	}
 
 }
