@@ -15,7 +15,7 @@ public class ConnectFour {
 	/**
 	 * Starts a local game. Has to run the LocalGame class.
 	 */
-	public static void playLocal() {
+	private static void playLocal() {
 		Runnable play = new LocalGame();
 		play.run();
 	}

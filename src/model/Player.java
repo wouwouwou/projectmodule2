@@ -39,8 +39,8 @@ public abstract class Player {
 	 *            the mark of the player.
 	 */
 	public Player(String theName, Mark theMark) {
-		this.name = theName;
-		this.mark = theMark;
+		name = theName;
+		mark = theMark;
 	}
 	
 	
