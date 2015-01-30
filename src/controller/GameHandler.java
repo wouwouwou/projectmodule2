@@ -47,6 +47,12 @@ public class GameHandler extends Observable implements Runnable {
 
 	/**
 	 * Creates a new LocalGame object.
+	 * 
+	 * @param p1
+	 *            name of first ClientHandler (player one)
+	 * 
+	 * @param p2
+	 *            name of first ClientHandler (player one)
 	 */
 	public GameHandler(ClientHandler p1, ClientHandler p2) {
 		board = new Board();
@@ -100,7 +106,9 @@ public class GameHandler extends Observable implements Runnable {
 	 * Checks if the move send by a client is a valid move.
 	 * 
 	 * @param message
-	 * @return
+	 *            Move command send by the client
+	 * 
+	 * @return true if it is a valid move
 	 */
 	boolean checkMove(String message) {
 		int choice = determineMove(message);
